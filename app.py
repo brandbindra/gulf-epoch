@@ -154,38 +154,64 @@ Start with [ and end with ]. No markdown, no explanation, just JSON."""
 
     data = response.json()
     text = ''.join(b['text'] for b in data.get('content', []) if b.get('type') == 'text')
-        # Extract JSON array with robust parsing
+        # Extract JSON array with robust field-by-field parsing
     match = re.search(r'\[[\s\S]*\]', text)
     if not match:
-        raise ValueError(f'No JSON array in Claude response. Got: {text[:300]}')
-    
+        raise ValueError(f'No JSON array in Claude response. Got: {text[:200]}')
     raw = match.group(0)
-    
-    # Try direct parse first
+
+    # Try direct JSON parse first
     try:
         articles = json.loads(raw)
-        return articles[:5] if isinstance(articles, list) else []
+        if isinstance(articles, list) and articles:
+            for a in articles:
+                if 'body' in a:
+                    a['body'] = a['body'].replace('|||PARA|||', '\n\n')
+            return articles[:5]
     except json.JSONDecodeError:
         pass
-    
-    # Clean common issues: smart quotes, trailing commas, newlines in strings
-    import html
-    raw = html.unescape(raw)
-    raw = raw.replace('\u2018', "'").replace('\u2019', "'")  # smart single quotes
-    raw = raw.replace('\u201c', '"').replace('\u201d', '"')  # smart double quotes
-    raw = raw.replace('\u2014', '-').replace('\u2013', '-')  # em/en dashes
-    raw = re.sub(r',\s*([}\]])', r'\1', raw)  # trailing commas
-    
-    # Fix unescaped newlines inside strings
-    def fix_strings(m):
-        return m.group(0).replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
-    raw = re.sub(r'"[^"]*"', fix_strings, raw)
-    
-    try:
-        articles = json.loads(raw)
-        return articles[:5] if isinstance(articles, list) else []
-    except json.JSONDecodeError as e:
-        raise ValueError(f'JSON parse failed after cleanup: {e}. Raw start: {raw[:200]}')
+
+    # Robust fallback: extract fields one by one with regex
+    # Handles apostrophes and unescaped characters in text
+    articles = []
+    obj_blocks = re.findall(r'\{[^{}]+\}', raw, re.DOTALL)
+    # If no simple objects found, try harder
+    if not obj_blocks:
+        obj_blocks = re.split(r'(?<=\}),?\s*(?=\{)', raw.strip()[1:-1])
+
+    for block in obj_blocks:
+        a = {}
+        for field in ['tag', 'headline', 'standfirst', 'body']:
+            # Match field: "value" capturing everything up to next field or end
+            m = re.search(
+                rf'"{field}"\s*:\s*"((?:[^"\\]|\\.)*)"',
+                block, re.DOTALL
+            )
+            if m:
+                val = m.group(1)
+                val = val.replace('\\n', '\n').replace('\\t', ' ')
+                val = val.replace('|||PARA|||', '\n\n')
+                a[field] = val
+            else:
+                # Grab everything between this field's quote and the next key
+                idx = block.find(f'"{field}"')
+                if idx >= 0:
+                    rest = block[block.find('"', block.find(':', idx))+1:]
+                    nxt = re.search(r'"(?:tag|headline|standfirst|body|sources)"', rest)
+                    val = rest[:nxt.start()-2].strip() if nxt else rest.rstrip('}"\n, ')
+                    val = val.replace('|||PARA|||', '\n\n')
+                    a[field] = val
+
+        src = re.search(r'"sources"\s*:\s*\[([^\]]*)\]', block)
+        a['sources'] = re.findall(r'"([^"]+)"', src.group(1)) if src else []
+
+        if a.get('headline') and len(a['headline']) > 5:
+            articles.append(a)
+
+    if articles:
+        return articles[:5]
+    raise ValueError(f'Could not parse any articles. Raw[:300]: {raw[:300]}')
+
 
 
 # ── ROUTES ────────────────────────────────────────────────────────────
