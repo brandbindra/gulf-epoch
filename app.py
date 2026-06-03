@@ -107,7 +107,7 @@ def synthesise(section_id, items, source_names):
     label = SECTION_LABELS.get(section_id, section_id)
     headlines = '\n'.join(
         f"[{i+1}] ({it['source']}) {it['title']}: {it['description']}"
-        for i, it in enumerate(items[:15])
+        for i, it in enumerate(items[:10])
     )
 
     prompt = f"""You are the editor of The Gulf Epoch, a premium AI-synthesised personal newspaper for a UAE-based reader. Today is {today}.
@@ -142,10 +142,10 @@ Start with [ and end with ]. No markdown, no explanation, just JSON."""
         },
         json={
             'model': 'claude-sonnet-4-6',
-            'max_tokens': 4000,
+            'max_tokens': 2000,
             'messages': [{'role': 'user', 'content': prompt}],
         },
-        timeout=90,
+        timeout=55,
     )
 
     if not response.ok:
