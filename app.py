@@ -154,11 +154,38 @@ Start with [ and end with ]. No markdown, no explanation, just JSON."""
 
     data = response.json()
     text = ''.join(b['text'] for b in data.get('content', []) if b.get('type') == 'text')
+        # Extract JSON array with robust parsing
     match = re.search(r'\[[\s\S]*\]', text)
     if not match:
         raise ValueError(f'No JSON array in Claude response. Got: {text[:300]}')
-    articles = json.loads(match.group(0))
-    return articles[:5] if isinstance(articles, list) else []
+    
+    raw = match.group(0)
+    
+    # Try direct parse first
+    try:
+        articles = json.loads(raw)
+        return articles[:5] if isinstance(articles, list) else []
+    except json.JSONDecodeError:
+        pass
+    
+    # Clean common issues: smart quotes, trailing commas, newlines in strings
+    import html
+    raw = html.unescape(raw)
+    raw = raw.replace('\u2018', "'").replace('\u2019', "'")  # smart single quotes
+    raw = raw.replace('\u201c', '"').replace('\u201d', '"')  # smart double quotes
+    raw = raw.replace('\u2014', '-').replace('\u2013', '-')  # em/en dashes
+    raw = re.sub(r',\s*([}\]])', r'\1', raw)  # trailing commas
+    
+    # Fix unescaped newlines inside strings
+    def fix_strings(m):
+        return m.group(0).replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
+    raw = re.sub(r'"[^"]*"', fix_strings, raw)
+    
+    try:
+        articles = json.loads(raw)
+        return articles[:5] if isinstance(articles, list) else []
+    except json.JSONDecodeError as e:
+        raise ValueError(f'JSON parse failed after cleanup: {e}. Raw start: {raw[:200]}')
 
 
 # ── ROUTES ────────────────────────────────────────────────────────────
