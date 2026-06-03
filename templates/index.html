@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Gulf Epoch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ── VARIABLES ───────────────────────────────────────────────────────── */
+:root {
+  --gold:      #9a7b3a;
+  --gold-lt:   #c9a84c;
+  --gold-pale: #f5f0e4;
+  --ink:       #1a1a18;
+  --ink-mid:   #2e2e2a;
+  --ink-dim:   #5a5a54;
+  --ink-muted: #8a8a80;
+  --rule:      #d0cdc4;
+  --rule-lt:   #e8e5de;
+  --bg:        #faf8f3;
+  --bg-warm:   #f0ece0;
+  --white:     #ffffff;
+  --red:       #8b1a1a;
+  --serif:     'Playfair Display', 'Times New Roman', serif;
+  --blackletter: 'UnifrakturMaguntia', 'Times New Roman', serif;
+  --body:      'EB Garamond', Georgia, serif;
+  --sans:      'Libre Franklin', Arial, sans-serif;
+}
+
+/* ── RESET ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+button { cursor: pointer; font-family: inherit; }
+a { text-decoration: none; color: inherit; }
+
+/* ── READING PROGRESS BAR ────────────────────────────────────────────── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: var(--gold); width: 0%;
+  z-index: 9999; transition: width 0.1s linear;
+  display: none;
+}
+
+/* ── UTILITY ─────────────────────────────────────────────────────────── */
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+.rule-h { border: none; border-top: 1px solid var(--rule); margin: 0; }
+.rule-bold { border: none; border-top: 3px solid var(--ink); margin: 0; }
+.rule-gold { border: none; border-top: 2px solid var(--gold); margin: 0; }
+
+/* ── SCROLLBAR ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-warm); }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   HEADER
+════════════════════════════════════════════════════════════════════════ */
+#site-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--rule);
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* Top utility bar */
+.header-utility {
+  background: var(--gold-pale);
+  border-bottom: 1px solid var(--rule);
+  padding: 5px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.header-utility span {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.03em;
+}
+.refresh-stamp { color: var(--gold) !important; font-weight: 600; }
+.refresh-hint {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--ink-muted);
+  letter-spacing: 0.03em;
+}
+.refresh-hint kbd {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: monospace;
+}
+
+/* Masthead */
+.masthead {
+  padding: 16px 32px 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--white);
+}
+.hamburger {
+  background: none; border: none;
+  display: flex; flex-direction: column;
+  gap: 5px; padding: 4px 0; flex-shrink: 0;
+  min-width: 120px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--ink); transition: opacity 0.2s;
+}
+.hamburger:hover span { opacity: 0.6; }
+
+.masthead-center { flex: 1; text-align: center; }
+.masthead-title {
+  font-family: var(--blackletter);
+  font-size: clamp(32px, 4.5vw, 64px);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+  margin-bottom: 6px;
+}
+.masthead-rule {
+  display: flex; align-items: center;
+  justify-content: center; gap: 10px;
+  margin-bottom: 2px;
+}
+.masthead-rule::before, .masthead-rule::after {
+  content: ''; flex: 1; height: 1px; background: var(--rule);
+}
+.masthead-tagline {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+.masthead-ornament {
+  color: var(--gold);
+  font-size: 16px;
+  letter-spacing: 4px;
+}
+
+.masthead-actions { flex-shrink: 0; display: flex; gap: 8px; align-items: center; min-width: 120px; justify-content: flex-end; }
+.btn-home {
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 6px 14px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+.btn-home:hover { border-color: var(--ink); color: var(--ink); }
+.btn-refresh {
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 8px 18px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.btn-refresh:hover { background: var(--gold); border-color: var(--gold); transform: translateY(-1px); }
+.btn-refresh.loading { opacity: 0.6; cursor: wait; }
+
+/* Primary Nav */
+.primary-nav {
+  display: flex;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.primary-nav::-webkit-scrollbar { display: none; }
+.nav-btn {
+  background: none; border: none;
+  padding: 11px 15px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  position: relative;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+.nav-btn[data-color].active { border-bottom-color: var(--section-color); color: var(--section-color); }
+
+/* Live ticker */
+.ticker-bar {
+  display: flex;
+  align-items: center;
+  background: var(--ink);
+  height: 34px;
+  overflow: hidden;
+  position: relative;
+}
+.ticker-live-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  background: var(--red);
+  padding: 0 14px;
+  height: 100%;
+  z-index: 2;
+  position: relative;
+  gap: 6px;
+}
+.ticker-live {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--white);
+  white-space: nowrap;
+}
+.ticker-dot {
+  width: 6px; height: 6px;
+  background: var(--white);
+  border-radius: 50%;
+  animation: blink 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+.ticker-live-wrap::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 0; bottom: 0;
+  width: 10px;
+  background: var(--red);
+  clip-path: polygon(0 0, 0 100%, 100% 50%);
+}
+.ticker-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+  position: relative;
+  margin-left: 10px;
+}
+.ticker-track::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, var(--ink), transparent);
+  z-index: 2;
+}
+.ticker-track::after {
+  content: "";
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(to left, var(--ink), transparent);
+  z-index: 2;
+}
+.ticker-scroll {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: ticker-move 45s linear infinite;
+  gap: 0;
+}
+.ticker-scroll:hover { animation-play-state: paused; }
+@keyframes ticker-move {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);
+  padding: 0 28px;
+  letter-spacing: 0.02em;
+}
+.ticker-divider {
+  color: var(--gold-lt);
+  font-size: 14px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+.ticker-sep { color: rgba(255,255,255,0.3); flex-shrink: 0; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   LAYOUT
+════════════════════════════════════════════════════════════════════════ */
+#main-content { max-width: 1340px; margin: 0 auto; padding: 24px 32px 64px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   SECTION BLOCK
+════════════════════════════════════════════════════════════════════════ */
+.section-block { margin-bottom: 28px; padding-bottom: 6px; }
+.section-block + .section-block { border-top: 2px solid var(--ink); padding-top: 22px; }
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.section-flag {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.section-name {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--section-color, var(--ink));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-name::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 3px;
+  background: var(--section-color, var(--gold));
+  flex-shrink: 0;
+}
+.section-tagline {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+.section-more {
+  background: none; border: none;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--section-color, var(--gold));
+  padding: 3px 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.section-more:hover { opacity: 0.7; }
+.section-rule {
+  height: 2px;
+  background: var(--section-color, var(--ink));
+  margin: 8px 0 16px;
+  position: relative;
+}
+.section-rule::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule-lt);
+}
+
+/* Section grid — 4 columns */
+.section-grid {
+  display: grid;
+  grid-template-columns: minmax(0,2.5fr) minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);
+  gap: 0 22px;
+  align-items: start;
+}
+.col-2 { border-right: 1px solid var(--rule); padding-right: 22px; }
+.col-3 { border-right: 1px solid var(--rule); padding-right: 22px; }
+.col-4 { border-right: 1px solid var(--rule); padding-right: 22px; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   ARTICLE CARDS
+════════════════════════════════════════════════════════════════════════ */
+
+/* Tag label */
+.art-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--section-color, var(--gold));
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Source badges */
+.badges {
+  display: flex; gap: 5px; flex-wrap: wrap; margin-top: 7px;
+}
+.badge {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: var(--bg-warm);
+  border: 1px solid var(--rule);
+  padding: 2px 7px;
+  color: var(--ink-muted);
+}
+
+/* ── LEAD CARD ── */
+.card-lead {
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 14px;
+  transition: opacity 0.15s;
+  border-radius: 2px;
+}
+.card-lead:hover { opacity: 0.85; }
+.card-lead:hover .lead-headline { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+
+.lead-img-wrap {
+  position: relative;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.lead-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.card-lead:hover .lead-img { transform: scale(1.02); }
+.lead-img-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  padding: 20px 10px 6px;
+}
+
+.lead-border { border-left: 4px solid var(--section-color, var(--gold)); padding-left: 10px; margin-bottom: 7px; }
+
+.lead-headline {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.13;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  margin-bottom: 10px;
+}
+.lead-standfirst {
+  font-family: var(--body);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--section-color, var(--gold));
+  padding-left: 10px;
+}
+.lead-preview {
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink-dim);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+/* ── MEDIUM CARD ── */
+.card-med {
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule);
+  padding: 0 0 12px;
+  margin-bottom: 0;
+  transition: opacity 0.15s;
+}
+.card-med + .card-med { padding-top: 12px; }
+.card-med:hover { opacity: 0.85; }
+.card-med:hover .med-headline { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+
+.med-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  margin-bottom: 9px;
+  transition: opacity 0.2s;
+}
+.card-med:hover .med-img { opacity: 0.9; }
+.med-headline {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  margin-bottom: 6px;
+}
+.med-standfirst {
+  font-family: var(--body);
+  font-size: 12px;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+/* ── SMALL CARD ── */
+.card-small {
+  cursor: pointer;
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule-lt);
+  transition: opacity 0.15s;
+}
+.card-small:hover { opacity: 0.82; }
+.card-small:hover .small-headline { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+.small-bar { width: 3px; background: var(--section-color, var(--gold)); align-self: stretch; margin-right: 9px; flex-shrink: 0; margin-top: 1px; }
+.small-content { flex: 1; }
+.small-headline {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.small-img {
+  width: 72px; height: 56px;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   SECTION PAGE
+════════════════════════════════════════════════════════════════════════ */
+.section-page { display: none; }
+.section-page.active { display: block; }
+
+.section-page-header { margin-bottom: 20px; }
+.section-page-title {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  margin-bottom: 3px;
+}
+.section-page-sources {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  margin-top: 8px;
+}
+.section-page-sources span {
+  font-family: var(--sans); font-size: 10px; color: var(--ink-muted);
+}
+
+.section-page-grid {
+  display: grid;
+  grid-template-columns: minmax(0,3fr) minmax(0,2fr);
+  gap: 28px;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--rule);
+}
+.section-sidebar-label {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 8px;
+}
+.section-sidebar { border-left: 1px solid var(--rule); padding-left: 24px; }
+
+.section-more-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 0 28px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   ARTICLE READER
+════════════════════════════════════════════════════════════════════════ */
+#article-reader { display: none; }
+#article-reader.active { display: block; }
+
+.reader-wrap { max-width: 740px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.reader-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 6px 14px;
+  margin-bottom: 28px;
+  transition: all 0.15s;
+}
+.reader-back:hover { border-color: var(--ink); color: var(--ink); }
+
+.reader-tag { margin-bottom: 10px; }
+.reader-headline {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3.5vw, 42px);
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.reader-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.reader-meta-item {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+  display: flex; align-items: center; gap: 5px;
+}
+.reader-meta-sep { color: var(--rule); }
+.reader-read-time { font-weight: 600; color: var(--gold); }
+
+/* Pull quote / standfirst */
+.reader-standfirst {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--ink-mid);
+  line-height: 1.58;
+  border-left: 5px solid var(--section-color, var(--gold));
+  padding: 6px 0 6px 18px;
+  margin-bottom: 24px;
+  background: var(--gold-pale);
+  padding: 12px 16px;
+  border-radius: 0 2px 2px 0;
+}
+
+.reader-img-wrap { margin-bottom: 24px; overflow: hidden; }
+.reader-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+.reader-img-credit {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--ink-muted);
+  padding: 5px 0;
+  letter-spacing: 0.04em;
+}
+
+/* Body text with drop cap on first paragraph */
+.reader-body { }
+.reader-body p {
+  font-family: var(--body);
+  font-size: 18px;
+  color: var(--ink-mid);
+  line-height: 1.88;
+  margin-bottom: 22px;
+}
+.reader-body p:first-child::first-letter {
+  font-family: var(--serif);
+  font-size: 4.8em;
+  font-weight: 900;
+  float: left;
+  line-height: 0.72;
+  margin: 6px 10px -2px 0;
+  color: var(--section-color, var(--gold));
+  padding-right: 2px;
+}
+.reader-body p + p { text-indent: 0; }
+
+/* Attribution box */
+.reader-attribution {
+  margin-top: 32px;
+  padding: 14px 18px;
+  background: var(--gold-pale);
+  border-left: 3px solid var(--gold);
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-dim);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+}
+
+/* Related articles */
+.reader-related { margin-top: 36px; }
+.reader-related-title {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--rule);
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 20px;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   HAMBURGER MENU
+════════════════════════════════════════════════════════════════════════ */
+#menu-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(26,26,24,0.5);
+  backdrop-filter: blur(2px);
+}
+#menu-overlay.open { display: flex; }
+#menu-panel {
+  width: 300px;
+  background: var(--white);
+  border-right: 1px solid var(--rule);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+  animation: slideIn 0.2s ease;
+}
+@keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+#menu-backdrop { flex: 1; cursor: pointer; }
+
+.menu-header {
+  padding: 20px 20px 16px;
+  border-bottom: 3px solid var(--gold);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.menu-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.menu-subtitle {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--gold);
+}
+.menu-close {
+  background: none; border: none;
+  font-size: 22px; color: var(--ink-dim);
+  line-height: 1; padding: 0;
+  transition: color 0.15s;
+}
+.menu-close:hover { color: var(--ink); }
+
+.menu-nav { flex: 1; padding: 8px 0; }
+.menu-item {
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule-lt);
+  padding: 13px 20px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  transition: background 0.1s;
+}
+.menu-item:hover { background: var(--gold-pale); }
+.menu-item.active { background: var(--gold-pale); color: var(--gold); }
+.menu-item-sub {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--ink-muted);
+  font-weight: 400;
+  font-family: var(--serif);
+}
+.menu-arrow { color: var(--ink-muted); font-size: 14px; }
+
+.menu-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+.menu-footer p {
+  font-family: var(--sans);
+  font-size: 9px;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════════════════════════════════ */
+#site-footer {
+  background: var(--ink);
+  color: var(--white);
+  padding: 36px 32px 24px;
+}
+.footer-inner { max-width: 1340px; margin: 0 auto; }
+.footer-masthead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-title {
+  font-family: var(--blackletter);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+.footer-tag {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--gold-lt);
+}
+.footer-nav {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.footer-nav button {
+  background: none; border: none;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+.footer-nav button:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 14px;
+  font-family: var(--sans);
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .section-grid {
+    grid-template-columns: minmax(0,2fr) minmax(0,1.3fr) minmax(0,1fr);
+  }
+  .col-4 { display: none; }
+}
+@media (max-width: 820px) {
+  #main-content { padding: 14px 16px 48px; }
+  .masthead { padding: 10px 16px; }
+  .primary-nav { padding: 0 16px; }
+  .header-utility { padding: 5px 16px; }
+  .section-grid {
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    gap: 0 16px;
+  }
+  .col-3, .col-4 { display: none; }
+  .col-2 { border-right: none; padding-right: 0; border-left: none; }
+  .lead-img { height: 180px; }
+  .section-page-grid { grid-template-columns: 1fr; gap: 20px; }
+  .section-sidebar { border-left: none; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 16px; }
+  .section-more-grid { grid-template-columns: 1fr 1fr; }
+  .related-grid { grid-template-columns: 1fr; }
+  .reader-body p { font-size: 15px; }
+  .reader-img { height: 220px; }
+}
+@media (max-width: 560px) {
+  .masthead-title { font-size: 26px; }
+  .section-grid { grid-template-columns: 1fr; }
+  .col-2 { border: none; padding: 0; }
+  .section-more-grid { grid-template-columns: 1fr; }
+  #site-footer { padding: 24px 20px 16px; }
+  .reader-standfirst { font-size: 15px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   HOME PAGE LAYOUT
+════════════════════════════════════════════════════════════════════════ */
+#home-page { }
+#home-page.hidden { display: none; }
+.section-pages-container { }
+
+/* Hover states */
+article { transition: opacity 0.15s; }
+article:hover { opacity: 0.88; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     HAMBURGER MENU
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="menu-overlay">
+  <div id="menu-panel">
+    <div class="menu-header">
+      <div>
+        <div class="menu-title">The Gulf Epoch</div>
+        <div class="menu-subtitle">Thirty Sources. One AI. Zero Noise.</div>
+      </div>
+      <button class="menu-close" onclick="closeMenu()">✕</button>
+    </div>
+    <nav class="menu-nav" id="menu-nav"></nav>
+    <div class="menu-footer">
+      <p>The Gulf Epoch · Personal Edition<br>Synthesised by Claude AI</p>
+    </div>
+  </div>
+  <div id="menu-backdrop" onclick="closeMenu()"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════════════════════════════ -->
+<header id="site-header">
+  <div class="header-utility">
+    <span id="today-date"></span>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span>🕐 Synthesised: <span class="refresh-stamp" id="refresh-stamp">Wednesday, 3 June 2026 · 10:30 UAE</span> <span id="time-ago" style="color:var(--ink-muted);font-size:10px"></span></span>
+
+    </div>
+  </div>
+
+  <div class="masthead">
+    <button class="hamburger" onclick="openMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="masthead-center">
+      <h1 class="masthead-title">The Gulf Epoch</h1>
+      <div class="masthead-rule">
+        <span class="masthead-ornament">✦ ✦ ✦</span>
+      </div>
+      <p class="masthead-tagline">Thirty Sources. One AI. Zero Noise.</p>
+    </div>
+    <div class="masthead-actions">
+      <button class="btn-home" onclick="navigateTo('home')">⌂ Home</button>
+      <button class="btn-refresh" id="refresh-btn" onclick="triggerRefresh()">↻ Refresh ▾</button>
+    </div>
+  </div>
+
+  <nav class="primary-nav" id="primary-nav" aria-label="Main navigation"></nav>
+
+  <div class="ticker-bar" id="ticker-bar">
+    <div class="ticker-live-wrap">
+      <div class="ticker-dot"></div>
+      <span class="ticker-live">LIVE</span>
+    </div>
+    <div class="ticker-track">
+      <div class="ticker-scroll" id="ticker-scroll"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════════════════════ -->
+<main id="main-content">
+  <div id="home-page"></div>
+  <div id="section-page" style="display:none;"></div>
+  <div id="article-reader" style="display:none;"></div>
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════════════ -->
+<footer id="site-footer">
+  <div class="footer-inner">
+    <div class="footer-masthead">
+      <div>
+        <div class="footer-title">The Gulf Epoch</div>
+        <div class="footer-tag">Thirty Sources. One AI. Zero Noise.</div>
+      </div>
+      <div style="font-family:var(--sans);font-size:10px;color:rgba(255,255,255,0.4);text-align:right;line-height:1.7;">
+        Personal Edition · AI-Synthesised<br>
+        Not for redistribution
+      </div>
+    </div>
+    <nav class="footer-nav" id="footer-nav"></nav>
+    <div class="footer-bottom">
+      © 2026 The Gulf Epoch · Personal use only · Articles are original compositions synthesised by Claude AI<br>
+      Sources: Al Jazeera · BBC · Reuters · Khaleej Times · Gulf News · The National · NDTV · Times of India · ESPNcricinfo · Bloomberg · FT · WSJ · TechCrunch · Wired · MIT Tech Review · Variety · Pinkvilla · CNN Travel · Time Out Dubai
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     DATA + LOGIC
+═══════════════════════════════════════════════════════════════════════ -->
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// NEWS DATA — replace only this block on /refresh-priority or /refresh-all
+// Last refreshed: Wednesday, 3 June 2026 — 10:30 UAE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── APP CONFIG ──────────────────────────────────────────────────────
+const CACHE_TTL = 2 * 60 * 60 * 1000;
+let newsCache = {};
+let isFetching = false;
+
+const REFRESH_TIMESTAMP = "Wednesday, 3 June 2026 — 10:30 UAE";
+
+const TICKER = "Iran demands ceasefire on all fronts · Israel crosses Litani River · UAE lifts all flight restrictions · Abu Dhabi freezes rents · India beat Pakistan by 61 runs in T20 WC · Dhurandhar 2 streams June 5 · Alia Bhatt dazzles Cannes 2026";
+
+// Fallback images by section (Unsplash — works in hosted environment)
+const FALLBACK = {
+  "mideast-uae": ["https://images.unsplash.com/photo-1548608762-9b73db5e3000?w=900&q=85","https://images.unsplash.com/photo-1565008576549-57569a49371d?w=700&q=80","https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=700&q=80","https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=700&q=80","https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=700&q=80"],
+  uae: ["https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&q=85","https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=700&q=80","https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80","https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700&q=80","https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=700&q=80"],
+  subcontinent: ["https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=900&q=85","https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=700&q=80","https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=700&q=80","https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80","https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=700&q=80"],
+  world: ["https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=900&q=85","https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=700&q=80","https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=700&q=80","https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=700&q=80","https://images.unsplash.com/photo-1520923642038-b4259acecbd7?w=700&q=80"],
+  tech: ["https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=85","https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=700&q=80","https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=700&q=80","https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=700&q=80","https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=700&q=80"],
+  sports: ["https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=900&q=85","https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=700&q=80","https://images.unsplash.com/photo-1546519638-68e109498ffc?w=700&q=80","https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=700&q=80","https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=700&q=80"],
+  business: ["https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?w=900&q=85","https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=700&q=80","https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80","https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=700&q=80","https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=700&q=80"],
+  life: ["https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&q=85","https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80","https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80","https://images.unsplash.com/photo-1548608762-9b73db5e3000?w=700&q=80"],
+  markets: ["https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&q=85","https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=700&q=80","https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=700&q=80","https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?w=700&q=80","https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=700&q=80"],
+  entertainment: ["https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=900&q=85","https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=700&q=80","https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=700&q=80","https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=700&q=80","https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=700&q=80"],
+};
+
+
+// ── SERVER REFRESH — calls Flask backend ────────────────────────────
+async function refreshSection(sectionId) {
+  const res = await fetch('/api/refresh', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({section: sectionId}),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Server error ${res.status}`);
+  }
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data.articles || [];
+}
+
+// ── REFRESH LOGIC ────────────────────────────────────────────────────
+const PRIORITY_SECTIONS = ['mideast-uae', 'uae', 'subcontinent', 'markets'];
+
+async function doRefresh(sections) {
+  if (isFetching) return;
+  isFetching = true;
+
+  const btn = document.getElementById('refresh-btn');
+  const dropdown = document.getElementById('refresh-dropdown');
+  if (dropdown) dropdown.remove();
+
+  // Progress overlay
+  let overlay = document.getElementById('refresh-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'refresh-overlay';
+    overlay.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:16px 28px;font-family:var(--sans);font-size:12px;z-index:9999;min-width:340px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);border-top:3px solid #9a7b3a;';
+    overlay.innerHTML = '<div id="refresh-msg" style="margin-bottom:8px;font-weight:600;letter-spacing:0.02em;">Starting refresh…</div><div style="background:rgba(255,255,255,0.15);height:4px;border-radius:2px;overflow:hidden;"><div id="refresh-prog" style="height:100%;background:#9a7b3a;width:0%;transition:width 0.5s ease;"></div></div><div id="refresh-sub" style="margin-top:6px;font-size:10px;color:rgba(255,255,255,0.5);"></div>';
+    document.body.appendChild(overlay);
+  }
+
+  const setProgress = (msg, pct, sub) => {
+    const m = document.getElementById('refresh-msg');
+    const p = document.getElementById('refresh-prog');
+    const s = document.getElementById('refresh-sub');
+    if (m) m.textContent = msg;
+    if (p) p.style.width = pct + '%';
+    if (s) s.textContent = sub || '';
+    updateRefreshStatus(msg, btn);
+  };
+
+  let completed = 0;
+  const total = sections.length;
+
+  for (const sid of sections) {
+    const secLabel = SECTIONS.find(s => s.id === sid)?.label?.split('—')[0].trim() || sid;
+    const pct = Math.round((completed / total) * 90);
+
+    // Call Flask server — it fetches RSS + calls Claude API
+    setProgress(`🔄 Refreshing ${secLabel}…`, pct, `Section ${completed+1} of ${total}`);
+    try {
+      const articles = await refreshSection(sid);
+      if (articles && articles.length > 0) {
+        NEWS[sid] = articles;
+        newsCache[sid] = { articles, timestamp: Date.now() };
+        setProgress(`✓ ${secLabel} updated`, pct + 8, `${articles.length} articles ready`);
+      } else {
+        setProgress(`⚠ ${secLabel}: no articles returned`, pct, '');
+        await new Promise(r => setTimeout(r, 1000));
+      }
+    } catch(e) {
+      console.error('Refresh error:', sid, e);
+      setProgress(`❌ Error: ${e.message}`, pct, '');
+      await new Promise(r => setTimeout(r, 2000));
+    }
+
+    completed++;
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  setProgress('✓ All done — updating page…', 100, '');
+  await new Promise(r => setTimeout(r, 600));
+
+  // Rebuild page
+  buildHomePage();
+  if (currentPage !== 'home' && NEWS[currentPage]) renderSectionPage(currentPage);
+
+  // Update timestamp
+  const now = new Date().toLocaleString('en-GB', {
+    day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'
+  }) + ' UAE';
+  const stamp = document.getElementById('refresh-stamp');
+  if (stamp) stamp.textContent = now;
+  openStartTime = Date.now();
+
+  setTimeout(() => { overlay.remove(); }, 2000);
+  resetRefreshBtn(btn);
+  isFetching = false;
+}
+function updateRefreshStatus(msg, btn) {
+  if (btn) {
+    btn.innerHTML = `<span style="display:flex;align-items:center;gap:6px">
+      <span style="display:inline-block;width:10px;height:10px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite"></span>
+      ${msg}
+    </span>`;
+    btn.classList.add('loading');
+    btn.disabled = true;
+  }
+}
+
+function resetRefreshBtn(btn) {
+  if (btn) {
+    btn.innerHTML = '↻ Refresh ▾';
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+function showError(msg) {
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#8b1a1a;color:#fff;padding:12px 18px;font-family:var(--sans);font-size:12px;z-index:9999;border-radius:2px;max-width:300px;';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
+const SECTIONS = [
+  { id:"mideast-uae",   label:"Gulf Slate",         tagline:"Middle East & UAE · Local, authoritative, deeply rooted",   color:"#9a7b3a", sources:"Al Jazeera, BBC Middle East, Reuters" },
+  { id:"uae",           label:"Gulf Slate — UAE",    tagline:"The UAE story, told with authority",                         color:"#9a7b3a", sources:"Khaleej Times, Gulf News, The National" },
+  { id:"subcontinent",  label:"Subcontinent Desk",   tagline:"India and beyond · The region that shapes the Gulf",         color:"#c0622b", sources:"NDTV, Times of India, India Today" },
+  { id:"world",         label:"Global Dispatch",     tagline:"Our network of international correspondents",                color:"#2a2a28", sources:"New York Times, Reuters, The Guardian" },
+  { id:"tech",          label:"Innovation Ledger",   tagline:"Technology as a matter of record",                           color:"#1a4a7a", sources:"TechCrunch, Wired, MIT Tech Review" },
+  { id:"sports",        label:"The Arena",           tagline:"Where champions are made",                                   color:"#8b1a1a", sources:"ESPNcricinfo, BBC Sport, ESPN" },
+  { id:"business",      label:"Commerce & Enterprise",tagline:"The forces that move markets",                              color:"#5a3a1a", sources:"Bloomberg, Financial Times, WSJ" },
+  { id:"life",          label:"Culture & Society",   tagline:"How we live · What we value · Who we are",                  color:"#4a1a6a", sources:"Time Out Dubai, BBC Life, CNN Travel" },
+  { id:"markets",       label:"Bourse & Yield",      tagline:"Capital, data and the language of value",                   color:"#1a5a2a", sources:"Bloomberg Markets, CNBC, FT Markets" },
+  { id:"entertainment", label:"The Ritz & Review",   tagline:"Cinema, stage, screen and celebrity",                       color:"#6a1a2a", sources:"Variety, Pinkvilla, NDTV Entertainment" },
+];
+
+const NEWS = {
+  "mideast-uae": [
+    { tag:"Iran-Israel War", headline:"Iran demands ceasefire on all fronts as Israel pushes past Litani River into Lebanon", standfirst:"Iranian officials issued an ultimatum for a simultaneous ceasefire across all theatres as Israeli forces crossed the Litani River, with UN peacekeepers powerless to halt the advance.", body:"Iranian officials stepped up diplomatic pressure on Tuesday, demanding a comprehensive ceasefire covering Lebanon, Gaza and Iranian territory simultaneously, as Israeli ground forces pushed past the Litani River in southern Lebanon in what Beirut's government called the most serious violation of Lebanese sovereignty in decades. Al Jazeera's Zeina Khodr, reporting from Beirut, said the UN Interim Force in Lebanon was helpless to prevent the incursion, with UNIFIL commanders describing their mandate as insufficient for the scale of military activity they are witnessing.\n\nThe Litani River crossing is significant because the 2006 UN Security Council Resolution 1701, which ended the last major Israel-Hezbollah war, explicitly required Israeli forces to remain south of that line. Israel's crossing marks a formal breach of that framework and has triggered emergency consultations at the Security Council in New York, where the US is expected to block any binding resolution censuring Israel's actions.\n\nHezbollah, for its part, has agreed to pause its rocket fire into northern Israel pending ceasefire negotiations, according to Khaleej Times, which cited a statement from the group's political bureau. The pause is being read by regional diplomats as a signal that Hezbollah is prepared to accept a negotiated outcome if Iran's broader demands are addressed, though the conditions for a lasting arrangement remain deeply contested.\n\nFor UAE residents, the latest escalation has renewed anxiety about regional stability even as Dubai International Airport returned to full operations last month following airspace restrictions that accompanied the earlier phase of the conflict. The UAE's foreign ministry reiterated its call for an immediate ceasefire on all fronts and urged all parties to prioritise civilian protection.\n\nThe humanitarian situation in southern Lebanon is deteriorating rapidly. International aid organisations report that the displacement of civilians from Litani-area villages has overwhelmed reception facilities in Tyre and Sidon, with the Lebanese Red Cross appealing for emergency international support.\n\nAli Larijani, the long-serving Iranian political figure who served as parliament speaker and nuclear negotiator, has died, Iran officially announced. His death removes one of the Islamic Republic's most experienced diplomatic voices at a moment when Tehran is navigating the most complex international crisis in its recent history.", sources:["Al Jazeera","Khaleej Times","Reuters"] },
+    { tag:"UAE Diplomacy", headline:"UAE may join efforts to secure Strait of Hormuz as Gargash holds talks with global partners", standfirst:"Anwar Gargash confirmed the UAE is in active discussions about participating in a multilateral naval mission to protect commercial shipping through the world's most critical oil transit chokepoint.", body:"UAE Minister of State for Foreign Affairs Anwar Gargash confirmed on Tuesday that Abu Dhabi is actively discussing participation in an international naval mission to secure the Strait of Hormuz for commercial shipping, in the most direct signal yet that the UAE is prepared to take a visible role in addressing the maritime crisis. Gulf News reported that Gargash is in contact with counterparts in the US, European capitals and fellow Gulf states about the framework of any such operation.\n\nThe UAE's potential involvement carries significant diplomatic weight. As a country that has historically maintained open channels with both Washington and Tehran, and which hosts the world's busiest international airport and one of its most active commercial ports, Abu Dhabi's participation would lend the mission a legitimacy that a purely Western operation would lack. Iranian officials have warned that any state joining an escort mission would be considered a co-belligerent, a threat the UAE is clearly weighing carefully.\n\nThe Strait of Hormuz carries approximately one-fifth of the world's daily oil supply, and its effective closure since the conflict began has sent energy prices sharply higher across all import-dependent economies. The UAE's own Jebel Ali port, which serves as the region's primary transshipment hub, has been significantly affected by rerouting of container vessels.\n\nUAE President Sheikh Mohamed bin Zayed Al Nahyan held telephone calls with multiple world leaders on Tuesday to discuss the regional situation, as Abu Dhabi continued its intensive diplomatic engagement with all parties. The calls included conversations with leaders whose countries have significant economic stakes in the Hormuz reopening, including Indian Prime Minister Modi.\n\nThe UAE Moonsighting Committee is also set to convene this week to determine the date of the Islamic New Year holiday, expected around June 16 or 17, providing UAE residents with a brief public holiday amid the turbulent regional period.\n\nAbu Dhabi has also temporarily frozen rents on residential, commercial and industrial properties, Khaleej Times reported, in a measure designed to shield residents and businesses from the economic uncertainty generated by the regional conflict.", sources:["Gulf News","Khaleej Times","Al Jazeera"] },
+    { tag:"Trump-Hezbollah", headline:"Trump says no more Israeli troops going to Beirut as Hezbollah agrees to halt fire", standfirst:"A significant de-escalation signal emerged as US President Trump stated publicly that Israeli forces would not advance on Beirut, while Hezbollah simultaneously confirmed it was pausing rocket attacks.", body:"US President Donald Trump stated publicly that Israeli troops would not be advancing on Beirut, in a statement that Khaleej Times described as the most significant US signal of constraint on Israeli military action since the current conflict began. The declaration came hours after Hezbollah confirmed it had agreed to pause its rocket fire into northern Israel, creating what regional diplomats cautiously described as a potential opening for broader de-escalation.\n\nThe Trump statement appears to reflect growing concern in Washington about the strategic and humanitarian consequences of an Israeli ground offensive into Lebanon's capital, which would dwarf in scale and complexity the military operations conducted so far. Beirut is home to more than two million people and its devastation would produce a humanitarian catastrophe that even the conflict's most hawkish advocates acknowledge would be strategically counterproductive.\n\nHezbollah's agreement to pause fire was mediated by Qatar, which has maintained communication with the group throughout the conflict. Qatari officials described the pause as conditional on a reciprocal halt in Israeli airstrikes targeting Hezbollah infrastructure in southern Lebanon and the Bekaa Valley. The arrangement is fragile and has not been formalised in any written agreement.\n\nFor ordinary Lebanese, the pause brings temporary relief after weeks of alerts, displacement and economic disruption. Beirut's restaurants and hotels reported a modest increase in bookings as residents and some cautious visitors tested the relative calm. The Lebanese lira recovered slightly against the dollar on parallel markets.\n\nThe regional diplomatic community is watching the signals carefully for signs that they represent the beginning of a broader process or merely a tactical pause. Several ambassadors told Reuters they were cautiously hopeful but noted that similar pauses during previous Lebanon conflicts had repeatedly broken down.\n\nIsrael has not yet responded publicly to Trump's Beirut statement, with government officials saying only that operational decisions would be made on the basis of military necessity.", sources:["Khaleej Times","Reuters","Al Jazeera"] },
+    { tag:"Journalism Under Fire", headline:"Israeli strike kills journalist's children in Gaza as global outrage mounts over civilian toll", standfirst:"An Israeli strike that killed the children of a prominent Al Jazeera journalist has intensified international anger over civilian casualties, with devastating testimony published by the broadcaster.", body:"An Israeli airstrike killed the children of an Al Jazeera journalist covering the conflict in Gaza, the broadcaster reported, in a story that has generated an enormous international reaction and renewed calls for accountability. The journalist's account — 'An Israeli strike killed my children. What pains me is not just their loss but also the normalisation of their murder' — described not only personal grief but the broader desensitisation to civilian death that has characterised the conflict's coverage.\n\nThe incident is one of dozens of strikes on journalists, their families and press facilities that international media freedom organisations have documented since the conflict began. The Committee to Protect Journalists has recorded more deaths of journalists in this conflict than in any comparable period since it began tracking journalist fatalities in 1992.\n\nArab foreign ministers, meeting in emergency session, condemned the strikes on civilian and media targets and called for the International Criminal Court to exercise jurisdiction. Several states noted that the ICC's jurisdiction is contested by Israel and the United States, but argued that the principle of accountability must be asserted even where enforcement is uncertain.\n\nFor the UAE's large Arab expatriate community, stories of civilian death carry a weight that is felt personally and communally. Mosques across the UAE dedicated their Tuesday sermons to prayers for those affected, and community fundraising for humanitarian relief has reached levels not seen since the early years of the Syrian civil war.\n\nThe humanitarian corridor that has been the subject of negotiations between Israel, the UN and Qatar for several weeks has still not been operationalised, with disagreements persisting over the terms of its operation. UN officials say the delay is costing lives among Gaza's most vulnerable population.\n\nInternational law experts interviewed by Al Jazeera said the scale of civilian casualties has crossed thresholds that, under the laws of armed conflict, require independent investigation regardless of the military objectives being pursued.", sources:["Al Jazeera","Reuters","BBC Middle East"] },
+    { tag:"UAE Aviation", headline:"UAE aviation fully restored as Dubai airport returns to normal operations after Iran war disruption", standfirst:"The UAE General Civil Aviation Authority has lifted all flight restrictions imposed since the start of the US-Israel war on Iran, with Emirates, Etihad and flydubai all operating normal schedules.", body:"The United Arab Emirates has lifted all flight restrictions put in place since the start of the US-Israel war on Iran, the country's General Civil Aviation Authority announced, declaring that all air operations have returned to normal status in UAE airspace. Al Jazeera reported the announcement, noting that the aviation authority said its decision followed a comprehensive assessment of operational and security conditions in coordination with the relevant authorities.\n\nThe restoration of full UAE aviation operations is a significant milestone for the country's economy and international standing. Dubai International Airport, the world's busiest international hub by passenger numbers, had been operating under severe restrictions since late February when Tehran's retaliatory strikes forced the closure of large portions of regional airspace. At the height of the disruption, Emirates and flydubai temporarily halted all operations while Etihad suspended departures from Abu Dhabi.\n\nThe impact on UAE tourism, transit and business travel during the restriction period was substantial. Hotels reported occupancy drops of 20-30%, airline revenues fell sharply and the country's role as a regional connectivity hub was temporarily undermined. The restoration of normal operations will take several weeks to translate into full commercial recovery.\n\nEuropean tourists who had been stranded in Dubai during the height of the disruption described a disorienting experience of being in a place marketed as a safe oasis while surrounded by news of regional conflict. The UAE authorities' management of the crisis — maintaining internal security and public order throughout — has been widely noted as a demonstration of the country's institutional resilience.\n\nThe aviation authority said it would continue monitoring the situation and that the resumption of normal operations was based on current conditions, with the capacity to reimpose restrictions if the security environment changed materially.\n\nFor the UAE economy, the timing of the aviation restoration is helpful. The summer travel season begins in earnest in June and July, and the return of normal flight operations means the UAE should be able to capture a meaningful portion of this season's traffic, offsetting some of the revenue losses from the disruption period.", sources:["Al Jazeera","The National","Khaleej Times"] },
+  ],
+  uae: [
+    { tag:"Abu Dhabi Policy", headline:"Abu Dhabi freezes rents on all property categories amid regional economic uncertainty", standfirst:"The Abu Dhabi government has imposed a temporary rent freeze across residential, commercial and industrial properties to protect residents and businesses from conflict-driven economic pressures.", body:"Abu Dhabi has announced a temporary freeze on rents for residential, commercial and industrial properties across the emirate, Khaleej Times reported, in a significant policy intervention designed to protect residents and businesses from the economic uncertainty generated by the regional conflict. The freeze applies with immediate effect and will remain in place pending a formal review of market conditions.\n\nThe measure is particularly significant for Abu Dhabi's large expatriate community, which makes up the majority of the emirate's population and for whom rental costs are typically the largest single household expense. Property market data had been showing upward pressure on rents even before the conflict began, driven by population growth and constrained supply in desirable residential areas.\n\nCommercial and industrial property operators have also welcomed the freeze, with business owners noting that the combination of elevated fuel costs, logistics disruption from the Hormuz situation and general economic uncertainty had already squeezed margins. The ability to hold rental costs steady provides at least one element of cost certainty during a difficult trading period.\n\nThe Abu Dhabi Department of Municipalities and Transport will oversee compliance, with penalties applicable to landlords who seek to circumvent it through contract restructuring or other mechanisms. Tenants are advised to report any violations to the department's dedicated hotline.\n\nThe National noted that Abu Dhabi's move mirrors steps taken by Dubai's Real Estate Regulatory Authority, which has been monitoring the market closely and has indicated it will act if rental increases become destabilising.\n\nThe freeze is expected to remain in place for at least three months, with a review scheduled for September that will assess whether market conditions have normalised sufficiently to allow a return to market-based pricing.", sources:["Khaleej Times","The National","Gulf News"] },
+    { tag:"Sheikh Hamdan", headline:"Sheikh Hamdan issues executive resolution regulating use of cameras across Dubai's public spaces", standfirst:"Dubai's Crown Prince has signed a comprehensive new regulation governing camera use in public areas, balancing security needs with privacy protections for residents and visitors.", body:"Sheikh Hamdan bin Mohammed bin Rashid Al Maktoum, Crown Prince of Dubai, Deputy Prime Minister and Minister of Defence, acting as Chairman of the Executive Council of Dubai, has issued Executive Council Resolution No. 13 of 2026 regulating the use of cameras in Dubai's public spaces, Emirates 24/7 reported. The resolution establishes a comprehensive framework governing who may install cameras, where they may be positioned, and how footage may be stored and accessed.\n\nThe regulation reflects Dubai's evolution into one of the world's most surveilled urban environments, with cameras now ubiquitous across the emirate's transport networks, commercial districts and residential areas. The existing patchwork of regulations had been described by legal experts as fragmented and inconsistent, creating uncertainty for property owners, businesses and individuals about their rights and obligations.\n\nUnder the new resolution, any entity seeking to install cameras in public-facing locations must register with the relevant Dubai authority and comply with specified technical and operational standards. Footage retention periods are standardised, and provisions specify under what circumstances law enforcement agencies may access privately held footage.\n\nPrivacy advocates noted that while the regulation is welcome as an improvement, it still grants authorities broader access than comparable frameworks in European jurisdictions. Dubai officials argue that the emirate's specific security environment and its status as a global hub make a different calibration of the privacy-security balance appropriate.\n\nThe regulation also addresses camera use by members of the public in sensitive areas such as government buildings, diplomatic missions and certain commercial facilities. Clear signage requirements ensure visitors are aware of any camera restrictions before entering relevant areas.\n\nImplementation will be phased over six months to allow existing operators to bring their systems into compliance, with a dedicated portal established by the Dubai Digital Authority for registration and compliance certification.", sources:["Emirates 24/7","The National","Gulf News"] },
+    { tag:"Islamic New Year", headline:"UAE Moonsighting Committee convenes tomorrow to confirm Islamic New Year date", standfirst:"The official committee will meet to observe the crescent moon marking the start of Muharram, with the Islamic New Year expected to fall on June 16 or 17 depending on sighting conditions.", body:"The UAE's official Moonsighting Committee will convene tomorrow evening to determine the start date of Muharram 1447 AH and confirm the date of the Islamic New Year public holiday, Gulf News reported. Astronomical calculations suggest the crescent moon will be sighted on either June 4 or June 5, making the public holiday most likely to fall on June 16 or 17 — though the official announcement will follow the committee's formal deliberations.\n\nThe moonsighting process combines traditional observation by appointed committee members at designated locations across the UAE with corroborating astronomical data that the authority uses when physical sighting is uncertain. The UAE's methodology has been refined over recent years to balance traditional practice with the need for advance notice that modern planning requirements demand.\n\nIslamic New Year is observed as a single public holiday across the UAE, with government offices, schools and most private sector businesses closed for the day. Unlike Eid celebrations, which involve multi-day festivities, Muharram 1 is typically a day of personal reflection on the Islamic new year and the significance of the month of Muharram in Islamic tradition.\n\nReligious leaders across the UAE have called on the community to use the Islamic New Year as an occasion for prayer particularly on the themes of peace and reconciliation that are especially resonant given the current regional situation. Mosques will hold special Muharram observances in the days following the new year.\n\nThe formal announcement will be made by UAE authorities through official channels following the committee's meeting, with confirmation expected by the evening of the day after the committee convenes.\n\nLooking ahead, UAE residents are already calculating the remaining public holidays for 2026. National Day on December 2 and 3 is the next significant break after Islamic New Year, with the intervening months relatively light on official public holidays.", sources:["Gulf News","The National","Khaleej Times"] },
+    { tag:"Dubai Economy", headline:"Dubai commercial real estate records growing demand as technology and finance firms expand footprint", standfirst:"Grade A office space in DIFC, Business Bay and Dubai Internet City is at near-full occupancy as technology and financial services companies compete for premium locations.", body:"Dubai's commercial real estate market is experiencing sustained demand growth, particularly in the Grade A office segment where technology companies, financial services firms and regional headquarters operations are competing for premium space in the emirate's key business districts, Economy Middle East reported. DIFC, Business Bay and Dubai Internet City are all reporting near-full occupancy at rates tracking ahead of pre-pandemic highs.\n\nThe technology sector has been the primary driver of commercial demand, with both established global technology companies expanding their Dubai operations and a new generation of regional technology businesses outgrowing their initial premises. The UAE's zero corporate tax regime for most businesses, combined with Dubai's lifestyle appeal for global talent, has made the emirate an increasingly preferred location for technology companies serving the MENA region and beyond.\n\nFinancial services demand has also been robust, driven by the continued growth of the Dubai International Financial Centre as a hub for asset management, private equity, banking and insurance. DIFC's on-site community now includes more than 5,000 companies, and the free zone has been expanding its physical footprint through the Gate Avenue development.\n\nReal estate consultants note that constrained supply of truly Grade A space in Dubai's most sought-after locations is creating pricing pressure that may persist even if demand moderates. The gap between Grade A and Grade B commercial space has widened, with tenants increasingly willing to pay a significant premium for buildings that meet modern sustainability, technology and wellness standards.\n\nDubai's Department of Economy and Tourism has been monitoring property market dynamics closely, with Crown Prince Sheikh Hamdan personally inspecting the department's progress during a visit to review its operations and development programmes.\n\nThe residential market has shown parallel strength, with newer developments attracting strong buyer interest despite rising prices. Analysts note that the combination of yield-seeking international investors and end-user demand from the UAE's growing professional population is sustaining a market that some predicted would cool more sharply given the regional geopolitical environment.", sources:["Economy Middle East","Emirates 24/7","Gulf News"] },
+    { tag:"UAE President", headline:"Sheikh Mohamed mourns pioneer of UAE education Dr Mahmoud Ahmed Al Qaisiyah", standfirst:"UAE President led tributes to one of the founding figures of the country's modern education system, praising his contribution to national development since independence.", body:"UAE President His Highness Sheikh Mohamed bin Zayed Al Nahyan has mourned Dr Mahmoud Ahmed Al Qaisiyah, described as one of the pioneers of education in the UAE, praising his extraordinary contribution to the country's educational development from its earliest days as an independent state. The UAE president's tribute, reported by Emirates 24/7, described Dr Al Qaisiyah as a figure who kept pace with the country's renaissance since its inception and whose legacy endures in the institutions and individuals he shaped.\n\nDr Al Qaisiyah's career spanned the entire history of the UAE as an independent state, beginning in the era when the country was building its educational infrastructure from the ground up. He was associated with the establishment and development of several key educational institutions and played a role in the policy frameworks that have made UAE education one of the most significant achievements of the country's development story.\n\nThe UAE's education sector has undergone remarkable transformation since the country's founding in 1971, from a position of near-universal illiteracy among the indigenous population to one where the country regularly ranks among the top performers in MENA on international educational assessments.\n\nSenior UAE officials from across the federal and emirate governments offered condolences to Dr Al Qaisiyah's family, reflecting the widespread recognition of his contribution to national life. Educational institutions with which he was associated announced they would hold memorial events in his honour.\n\nHis death comes at a moment when the UAE is deepening its educational ambitions, with significant investment in AI-focused curricula, the expansion of higher education partnerships with global universities and the ongoing reform of the school system to prepare young Emiratis for a knowledge economy.\n\nFor the older generation of UAE nationals, the news is deeply personal — a reminder of the individuals who made enormous contributions in the country's early years to create the opportunities that subsequent generations have been able to build upon.", sources:["Emirates 24/7","The National","Gulf News"] },
+  ],
+  subcontinent: [
+    { tag:"Cricket — India vs Afghanistan", headline:"India host Afghanistan for landmark Test and ODI series starting June 6", standfirst:"The Afghanistan cricket team arrives in India for a historic multi-format tour comprising one Test and three ODIs, as India's packed summer cricket season begins.", body:"The Afghanistan cricket team is scheduled to tour India beginning June 6 for a series comprising one Test match and three One Day Internationals, the BCCI confirmed in March and reported by ESPNcricinfo. The tour represents a significant step in Afghanistan's cricketing development, as the team faces one of the world's top Test nations on home soil for the first time in a multi-format arrangement.\n\nThe Test match, scheduled from June 6 to 10, will be followed by three ODIs completing on June 20. Cricbuzz reported that India's squad for the series, selected under head coach Ashish Nehra, includes a combination of established players and emerging talent being blooded in home conditions. NDTV Business noted that Nishant Sindhu's deployment at number three during the series was not a predetermined move, suggesting the team management is using the tour to experiment with batting order options.\n\nAfghanistan has developed rapidly as a cricketing nation and now regularly features competitive spinners whose performances in international cricket have earned significant respect. The conditions in India, which favour spin bowling, may suit Afghanistan's strengths more than some other touring environments.\n\nThe IPL 2026 season concluded with Royal Challengers Bengaluru winning their second successive title, ESPNcricinfo confirmed, with Sooryavanshi winning the Orange Cap, MVP and Emerging Player awards. Tim David received a one-match suspension for the opening game of IPL 2027 following a disciplinary matter.\n\nIndia is also scheduled to tour Ireland for two T20 Internationals on June 26 and 28, as part of Ireland's home international season that includes several major cricketing nations.\n\nWomen's cricket also features prominently in the June calendar, with the India women's team touring England for T20 Internationals as preparation for both sides ahead of the 2026 Women's T20 World Cup.", sources:["ESPNcricinfo","NDTV","Times of India"] },
+    { tag:"India Economy", headline:"India's growth projected at 6.8-7.2% in 2026 as economy withstands global energy shock", standfirst:"The Department of Financial Services confirmed India's growth trajectory remains robust despite oil price pressures, with the country's diversified economic base providing resilience.", body:"India's economy is projected to grow between 6.8 and 7.2 per cent in 2026, the Secretary of the Department of Financial Services M. Nagaraju confirmed in remarks reported by Newsonair, describing India as one of the fastest-growing major economies in the world despite the headwinds created by elevated global energy prices from the conflict. The projection is broadly in line with IMF and World Bank forecasts.\n\nNifty 50 companies reported 4% year-on-year growth in profit after tax for the most recent quarter, marginally ahead of expectations, marking the eighth consecutive quarter of single-digit earnings growth, according to brokerage research reported by NDTV Business. The consistency of the earnings trajectory is being increasingly read by market strategists as evidence of structural earnings quality.\n\nIndia's emission intensity targets face challenges from uneven abatement costs across industrial sectors, Business Standard reported, with some energy-intensive industries finding the pace of decarbonisation economically difficult to sustain alongside the cost pressures created by elevated global energy prices.\n\nWipro has announced an acquisition of an additional 20% stake in US-based insurtech company Aggne Global for $28.5 million, increasing its ownership to 80%, Economic Times reported. The move aims to strengthen Wipro's position in AI-led transformation solutions for the property and casualty insurance sector.\n\nNomura has issued a bullish forecast for India's data centre sector, projecting a 30% compound annual growth rate through 2030 that could lift total capacity to approximately 7 gigawatts from the current 1.5-1.6 gigawatts, NDTV Business reported.\n\nNvidia CEO Jensen Huang, speaking at the GTC Taipei Keynote at Computex 2026, affirmed that Indian IT firms are well-placed for AI implementation — an endorsement that carries commercial weight given Nvidia's central role in AI infrastructure globally.", sources:["NDTV","Times of India","Business Standard"] },
+    { tag:"India-West Asia", headline:"PM Modi chairs further CCS meeting as India manages complex multi-sided West Asia interests", standfirst:"India's Cabinet Committee on Security has met again to review the country's response to the regional conflict, balancing its US partnership, Gulf diaspora welfare and strategic neutrality.", body:"Prime Minister Narendra Modi chaired another meeting of India's Cabinet Committee on Security focused on the West Asia situation, Newsonair reported, as the government continued its intensive management of a crisis that touches multiple vital Indian interests simultaneously. The meeting reviewed the welfare of the Indian diaspora across affected Gulf states, energy supply arrangements and India's diplomatic positioning.\n\nIndia occupies a uniquely delicate position. It is a strategic partner of the United States, having built a comprehensive defence and technology relationship over the past two decades. It is simultaneously a major consumer of Iranian oil, and has a diaspora of 3.5 million people in the UAE alone. And it is hosting major international cricket, which requires sustained cooperation even as partners fall out with each other.\n\nExternal Affairs Minister S. Jaishankar has been in intensive contact with his counterparts in Washington, Tehran, Abu Dhabi, Moscow and Beijing — a diplomatic hyperactivity that reflects both India's genuine interests and its aspiration to be seen as an indispensable participant in any eventual settlement.\n\nFirst Deputy Prime Minister of Russia Denis Manturov visited New Delhi last week for meetings that included discussions about energy supply alternatives. India and Russia have developed a substantial oil trade relationship since the Ukraine war, and Russian officials believe this creates leverage to maintain India's strategic neutrality on related issues.\n\nThe Indian diaspora in the Gulf remains the government's most acute concern. The Ministry of External Affairs has emergency response frameworks activated at all Indian diplomatic missions across the affected region, and Vande Bharat aircraft remain on standby for evacuation if the security situation deteriorates.\n\nThe opposition in India has been broadly supportive of the government's handling of the crisis, recognising that the situation calls for bipartisan solidarity on national security matters.", sources:["Times of India","NDTV","India Today"] },
+    { tag:"IPL 2026", headline:"RCB retain IPL title as Sooryavanshi sweeps all individual awards — Tim David suspended for IPL 2027 opener", standfirst:"Royal Challengers Bengaluru secured back-to-back IPL titles as Sooryavanshi won the Orange Cap, MVP and Emerging Player awards in a dominant season for the Bengaluru franchise.", body:"Royal Challengers Bengaluru have retained the Indian Premier League title, winning their second successive IPL championship in a campaign that ESPNcricinfo described as one of the most dominant in the tournament's history. Captain Rajat Patidar praised the RCB coaching staff after the victory, saying the team had not just played but dominated throughout the season.\n\nSooryavanshi was the undisputed individual star of IPL 2026, sweeping the Orange Cap for the most runs in the tournament, the Most Valuable Player award and the Emerging Player of the Season prize. ESPNcricinfo noted that his performances drew widespread commentary from cricket analysts who suggested he has established himself as one of the most exciting batting talents to emerge from Indian cricket in years.\n\nRCB's Tim David has been suspended for the opening game of IPL 2027 following a disciplinary matter at the close of the 2026 season, ESPNcricinfo reported. The suspension indicates the disciplinary panel found the matter sufficiently serious to warrant a competitive consequence rather than merely a fine.\n\nThe Women's Champions Trophy 2027 has been moved from June to February by the ICC, which will also pilot a new version of the Women's Emerging Nations Trophy. The scheduling change is intended to avoid the tournament coinciding with other major international cricket commitments.\n\nPakistan's ODI coach Mike Hesson used social media to defend his side's home pitches against criticism from the Australia tour party, which has questioned whether Pakistan's conditions adequately prepare teams for the ODI World Cup. Hesson argued there would be 'variety' in pitch conditions during the World Cup.\n\nThe Lanka Premier League has introduced impact substitutions for its 2026 season, along with a new rule requiring each team to field an under-23 player in their starting XI.", sources:["ESPNcricinfo","NDTV","India Today"] },
+    { tag:"India Tech", headline:"Wipro acquires majority stake in US insurtech as Indian IT firms accelerate AI-led acquisitions", standfirst:"Wipro's increased investment in Aggne Global is the latest in a series of Indian IT sector acquisitions targeting AI implementation capabilities in financial services.", body:"Wipro's decision to acquire an additional 20% stake in Aggne Global for $28.5 million, taking its ownership to 80%, is emblematic of a broader trend in Indian IT where large services companies are using acquisitions to build specialised AI implementation capabilities. The Economic Times reported that the Aggne transaction aims to bolster Wipro's position in AI-led transformation solutions for the property and casualty insurance sector.\n\nThe acquisition reflects the recognition within Indian IT that the industry's traditional strength in large-scale application management needs to be supplemented with deeper domain expertise and proprietary AI tooling to remain competitive as clients develop more sophisticated expectations of their technology partners.\n\nNomura's projection of 30% compound annual growth for India's data centre sector through 2030 creates significant opportunity for Indian IT companies with data centre management and cloud migration capabilities. The expected expansion from 1.5 gigawatts to approximately 7 gigawatts represents both the physical infrastructure build-out and the associated services market.\n\nJensen Huang's comments at Computex 2026 about Indian IT firms' AI readiness are commercially significant because they come from the CEO of the company that supplies the hardware infrastructure underpinning most AI development. His endorsement suggests Nvidia is actively engaged with Indian IT companies as implementation partners.\n\nIndia's technology sector is navigating the current global economic uncertainty from a position of relative strength. The combination of strong domestic digital growth, the global AI investment wave and the country's deep pool of engineering talent is sustaining demand for Indian IT services even as some Western clients tighten discretionary technology spending.\n\nThe RBI's continued focus on financial sector technology — including its Digital Payments Intelligence Platform and the UPI ecosystem's evolution — is creating ongoing domestic demand for financial technology services that supplements the export revenue from international clients.", sources:["Economic Times","NDTV","Times of India"] },
+  ],
+  world: [
+    { tag:"Ceasefire Talks", headline:"US and Iran edge toward ceasefire as Oman-brokered talks show first genuine progress", standfirst:"Indirect negotiations facilitated by Oman have produced what diplomatic sources describe as the first substantive exchange of positions since the conflict began.", body:"Indirect talks between the United States and Iran in Muscat have produced what senior diplomatic sources describe as the most substantive exchange of positions since the conflict began. The New York Times first reported the development, with Reuters subsequently confirming the broad outlines from sources on the Iranian side.\n\nThe emerging framework involves a phased approach: Iran would permit commercial shipping through the Strait of Hormuz under international naval escort as a confidence-building measure, while the US would pause further military strikes on Iranian territory. A broader international conference would then address the long-term nuclear and military questions at the heart of the conflict.\n\nIran's demand for a concrete pathway to sanctions relief remains the critical sticking point. The Trump administration has indicated a willingness to discuss the issue but insists that confidence-building measures must come first — a sequencing that Tehran has so far characterised as unacceptable.\n\nChina has been playing a more active role in the talks, pressing Iran privately to engage seriously with the phased approach. Beijing's calculation is that a prolonged conflict damages its own energy security and the Belt and Road relationships it has built across the region.\n\nEuropean foreign ministers meeting in Brussels issued a joint statement supporting the Omani-facilitated process and offering EU resources to support any eventual agreement, including economic incentives and monitoring capabilities that the US cannot provide.\n\nDomestic politics on both sides are complicating the diplomats' work. In Washington, a faction pushing for regime change creates pressure. In Iran, Revolutionary Guard hardliners have been resistant to any arrangement that could be portrayed domestically as capitulation.", sources:["Reuters","New York Times","The Guardian"] },
+    { tag:"Global Economy", headline:"World economy faces stagflation risk as oil shock meets AI investment boom in contradictory signals", standfirst:"Central bankers are struggling to read a landscape where energy-driven inflation is occurring simultaneously with a technology-driven productivity surge unlike any in recent history.", body:"The global economy is sending contradictory signals that are confounding policymakers and investors alike. On one hand, the Hormuz closure has triggered significant energy price inflation in energy-importing economies. On the other, massive AI infrastructure investment is generating genuine productivity improvements and keeping corporate earnings stronger than the oil shock alone would allow.\n\nThe IMF updated its 2026 global growth forecast downward to 2.8%, below the 3% threshold associated with global recession, while noting an unusually wide range of uncertainty. The fund's chief economist said its models are struggling to incorporate the AI productivity effect, which appears real but is distributed unevenly.\n\nIn the United States, the Federal Reserve faces its most difficult monetary policy environment in decades. Inflation has re-accelerated with energy costs, which normally argues for higher rates — but the AI investment boom is supporting employment and corporate investment in ways that make tightening particularly damaging to growth-oriented sectors.\n\nEurope is in a worse position. The continent imports a higher proportion of energy than the US and has fewer domestic AI champions to offset the economic pain. Several eurozone economies including Germany are now in technical recession.\n\nChina's position is complex but more comfortable. It suffers from higher energy costs but benefits from closer economic ties with Iran that give it preferential access to Iranian oil at below-market rates. China's own AI investment programme is also accelerating rapidly.\n\nFor Gulf states, the oil price windfall is providing a buffer being used for accelerated domestic investment and geopolitical positioning — funding reconstruction packages, supporting ceasefire diplomacy and building strategic reserves.", sources:["Reuters","New York Times","The Guardian"] },
+    { tag:"France Riots", headline:"France counts cost of PSG Champions League riots as Macron demands accountability", standfirst:"Three days after PSG's historic victory triggered widespread disorder, France reckons with nearly 280 arrests and €45 million in property damage across 15 cities.", body:"French authorities published a full damage assessment from the riots that erupted after Paris Saint-Germain won the UEFA Champions League final. Nearly 280 people were arrested across 15 French cities, 57 police officers were injured, and insurance claims for property damage are expected to reach €45 million — one of the costliest nights of civil disorder in France's modern history.\n\nPresident Macron convened an emergency meeting with Interior Ministry officials and described the scenes as unacceptable. Prosecutors in Paris announced they will seek pre-trial detention for those accused of the most serious offences, deploying a fast-track prosecution procedure developed during the 2023 pension reform protests.\n\nOpposition parties on both right and left seized on the disorder as evidence of broader social cohesion failure. Marine Le Pen's Rassemblement National cited immigration and integration failures, while left-wing parties argued poverty and alienation in the urban periphery were root causes.\n\nPSG itself issued a statement condemning the violence, noting that its supporters had worked hard to build a positive reputation in European football and that a minority had overshadowed what should have been pure celebration.\n\nFrench football authorities face questions about their own role. Several supporter organisations had warned in advance that the confluence of a Champions League victory with pre-existing social tensions created unusual risk, but their concerns were not translated into enhanced crowd management resources.\n\nUEFA has indicated it will review its protocols for managing celebrations around major finals, with other cities hosting subsequent major competitions also reviewing contingency arrangements.", sources:["The Guardian","Reuters","New York Times"] },
+    { tag:"Climate Crisis", headline:"Arctic ice records second-lowest extent ever measured as scientists warn of irreversible tipping points", standfirst:"New satellite data shows Arctic coverage at its second-lowest level in the satellite record, with leading climate scientists warning some feedback loops may have passed the point of no return.", body:"Arctic sea ice coverage is tracking at its second-lowest extent since systematic satellite measurement began in 1979, according to data from the National Snow and Ice Data Centre. The area of Arctic Ocean covered by sea ice is approximately 1.2 million square kilometres below the long-term average — roughly twice the area of France.\n\nA group of 47 leading climate scientists from 18 countries published an open letter calling on world leaders to convene an emergency summit specifically focused on the Arctic, arguing that changes in the region are occurring faster than anticipated and have consequences that extend globally.\n\nThe scientists warn that melting Arctic sea ice is accelerating the warming of the Arctic Ocean, which in turn is destabilising permafrost containing vast quantities of methane and carbon dioxide. The feedback loops this creates could prove irreversible on any human timescale.\n\nFor the Gulf states, which hosted COP28 in Dubai and made significant commitments on emissions reduction, the Arctic data is a sobering reminder of the stakes. UAE officials reiterated their net zero by 2050 target and pointed to ongoing expansion of solar energy and nuclear capacity.\n\nThe geopolitical dimensions of Arctic change are also pressing. Russia, Norway, Canada and the US all have significant interests in the region, including access to oil and gas reserves becoming more economically viable as ice retreats — creating a paradox of fossil fuel interest at a moment of climate urgency.\n\nThe UN Environment Programme will present the Arctic data to the General Assembly in September as part of a broader planetary boundaries report.", sources:["The Guardian","Reuters","New York Times"] },
+    { tag:"Malta Election", headline:"Malta's Labour Party wins historic fourth term as island bucks European trend of incumbent defeats", standfirst:"Prime Minister Robert Abela's snap election victory cements an extraordinary period of Labour dominance while raising questions about the pace of development and governance standards.", body:"Malta's Labour Party secured a historic fourth consecutive term under Prime Minister Robert Abela, who called and won a snap general election ahead of schedule. The result bucks the European trend of incumbents losing support amid cost-of-living pressures, making Labour's performance an outlier that political scientists are already analysing closely.\n\nAbela framed the election around economic management, pointing to Malta's status as one of the EU's fastest-growing economies and its success attracting financial services, gaming and technology companies. Malta's unemployment rate is among the lowest in Europe, and wages have risen in real terms despite broader European inflation pressures.\n\nThe opposition Nationalist Party ran on a platform emphasising corruption concerns, governance standards, the pace of construction transforming the island's skyline and pressure on public services — genuine issues that proved insufficient to overcome voters' positive assessment of their own economic situation.\n\nMalta's eurozone membership has provided monetary stability insulating it somewhat from energy price shocks hitting non-euro economies harder. Its physical distance from the conflict zone has meant geopolitical turbulence has been less immediately felt by Maltese voters than by other Mediterranean nations.\n\nWithin the EU, the result will be watched closely by other centre-left governments struggling to maintain their political positions. Social democratic parties in Germany, France and Italy are all under significant pressure, and Malta's Labour victory will be cited as evidence that progressive governments can win when they demonstrate genuine economic competence.\n\nFor the Mediterranean region, the result ensures continuity in Malta's approach to migration and its diplomatic positioning within the EU, where it has historically maintained constructive relations with Arab states.", sources:["Reuters","The Guardian","New York Times"] },
+  ],
+  tech: [
+    { tag:"AI Funding", headline:"AI absorbs 80% of global venture capital in record Q1 2026 as mega-rounds reshape the startup ecosystem", standfirst:"Artificial intelligence companies took $242bn of the $300bn invested globally — a concentration of capital without precedent in the history of venture finance.", body:"The venture capital market has been fundamentally restructured by AI, with Q1 2026 data confirming that AI companies absorbed 80% of all global venture investment. The $242 billion flowing into AI in three months exceeds the total venture capital invested globally in any full year before 2021.\n\nThe distribution of capital is highly unequal. OpenAI, Anthropic, xAI and Waymo absorbed approximately 65% of total AI venture investment between them, reflecting investor belief that AI is a winner-take-most market where first movers capture disproportionate commercial value.\n\nMicrosoft's $10 billion investment commitment in Japan — built around AI data centre infrastructure, cybersecurity cooperation and a commitment to training one million engineers — illustrates how AI capital deployment is reshaping technology ecosystems globally beyond Silicon Valley.\n\nShield AI, the autonomous military pilot startup, raised $1.5 billion in Series G funding as part of a $2.25 billion total package, valuing the company at $12.7 billion — up 140% in one year. The US Air Force has selected its Hivemind platform for its Collaborative Combat Aircraft programme.\n\nThe concentration of AI funding is raising competition concerns. Academic economists and antitrust regulators in both the US and EU are examining whether the extraordinary advantages in compute, data and talent accruing to the best-funded companies are creating barriers to entry that will prevent meaningful competition over the medium term.\n\nFor UAE and Gulf states aggressively positioning themselves as AI destinations, the Q1 data presents both opportunity — ample capital looking for deployment — and challenge in competing with Silicon Valley for top engineering talent despite tax advantages and quality of life.", sources:["TechCrunch","Wired","MIT Tech Review"] },
+    { tag:"AI Workforce", headline:"Tech layoffs accelerate as AI agents replace knowledge workers — 2026 already approaching 2025 full-year total", standfirst:"The contradiction at the heart of the AI boom — record investment and record job cuts simultaneously — is becoming impossible for the industry to ignore or explain away.", body:"The technology industry is simultaneously experiencing its greatest investment boom and one of its most intense periods of workforce reduction. TechCrunch data shows 2026 is already approaching the full-year total from 2025, with the most recent wave of cuts explicitly citing AI automation rather than economic headwinds.\n\nClickUp's decision to cut 22% of its workforce — explicitly replacing those roles with AI agents — is the most prominent but far from the only recent example. Several enterprise software companies and customer service platforms have made similar announcements, framing the cuts as necessary for competitive survival.\n\nBox founder Aaron Levie coined the term 'AI psychosis' to describe executives who lack deep understanding of what knowledge workers actually do making sweeping automation decisions based on overly optimistic assessments of AI capability. His argument has resonated widely in technology circles.\n\nThe data on AI system performance supports a more nuanced picture than either optimists or pessimists present. In narrow, well-defined tasks — document summarisation, code generation, query classification — AI agents have reached or exceeded human performance. In tasks requiring genuine contextual judgment or institutional knowledge, humans continue to outperform.\n\nDuckDuckGo has seen a significant surge in new user installations as internet users actively seek alternatives to Google's AI-first search interface. Users say they want direct links to sources rather than AI-generated summaries, suggesting meaningful consumer pushback against AI integration.\n\nRegulators in Europe, the UK and increasingly the US are examining the legal and ethical dimensions of AI-driven workforce reduction. The EU's AI Act includes provisions about the use of AI in employment decisions, and European labour laws may require consultation before AI-related workforce changes can be implemented.", sources:["TechCrunch","Wired","MIT Tech Review"] },
+    { tag:"Nvidia GTC", headline:"Jensen Huang's GTC keynote to unveil Blackwell Ultra as Nvidia faces first serious challenge from rivals", standfirst:"Nvidia's developer conference is the most anticipated technology event of 2026, with next-generation AI chips expected alongside growing evidence that AMD and custom silicon are mounting real competition.", body:"Nvidia's annual GTC developer conference opens this week with a keynote from CEO Jensen Huang expected to unveil the Blackwell Ultra architecture — the successor to chips that have powered the AI training boom of the past 18 months.\n\nThe strategic context is more competitive than at any point since Nvidia established its AI chip dominance. AMD has made genuine progress with its MI300X GPU, attracting customer commitments from Microsoft, Meta and several major cloud providers. Google, Amazon, Microsoft and Meta are all building custom silicon that reduces dependence on Nvidia for specific workloads.\n\nNvidia's response has been to move up the value chain, positioning itself not just as a chip supplier but as a full-stack AI infrastructure company. Its DGX Cloud service, NIM software platform and relationships with governments building sovereign AI capabilities are designed to create switching costs beyond hardware transactions.\n\nThe company's financial performance remains extraordinary. Quarterly revenue has grown from approximately $8 billion two years ago to over $80 billion — a trajectory with no precedent in the semiconductor industry. Net profit margins have expanded alongside revenues.\n\nFor the UAE, Nvidia's GTC announcements are watched closely by the country's technology leadership. G42, the Abu Dhabi AI company, is expected to announce an expansion of its Nvidia-powered AI cloud infrastructure. The UAE's sovereign AI programme is being built on Nvidia infrastructure.\n\nPhysical AI — Nvidia's term for applying AI to robots, autonomous vehicles and industrial systems — is expected to feature prominently in Huang's keynote. The company has been investing heavily in simulation environments that allow robots to be trained virtually before physical deployment.", sources:["MIT Tech Review","TechCrunch","Wired"] },
+    { tag:"AI Research", headline:"Meta, Google and OpenAI face researcher exodus as independent AI labs proliferate with alternative approaches", standfirst:"Leading AI scientists are leaving the industry's biggest companies to found independent research ventures focused on reinforcement learning and approaches beyond large language models.", body:"A significant wave of senior AI researchers is departing from Meta, Google, OpenAI and Anthropic to found independent laboratories. CNBC and Wired both describe it as the most significant talent shift in the history of the AI research community.\n\nThe departures reflect frustration with what researchers describe as the industrialisation of AI research — the pressure to deliver benchmark improvements and product features on quarterly timescales rather than pursue long-term exploratory work.\n\nYann LeCun, Meta's chief AI scientist, has argued publicly that large language models are fundamentally limited in their capacity to achieve human-level intelligence. His willingness to make these arguments from inside Meta has given intellectual cover to researchers who share his doubts.\n\nHumans&, founded by former Anthropic and xAI employees, has become the most prominent independent lab. Focused on reinforcement learning — training AI systems from their own experience rather than human-generated data — it raised $480 million in January and continues to attract top talent.\n\nIneffable Intelligence, a stealth startup taking a similar reinforcement learning approach focused on robotics, has attracted backing from investors who believe embodied AI experience will produce genuinely general AI capabilities.\n\nThe commercial implications are significant. Large labs have responded with extraordinary compensation packages — senior researchers at OpenAI and Anthropic reportedly receiving packages exceeding $10 million annually. But many departing researchers say compensation was not the primary factor; it was the desire to work on genuinely compelling intellectual problems.", sources:["Wired","TechCrunch","MIT Tech Review"] },
+    { tag:"IPO Season", headline:"SpaceX and xAI IPO roadshows loom as AI infrastructure firms seek public market valuations", standfirst:"The anticipated listings of SpaceX and xAI in the second half of 2026, combined with OpenAI's targeted Q4 debut near $1 trillion, will define investor appetite for AI public markets for years to come.", body:"SpaceX has begun early stages of its IPO roadshow, with bankers from Morgan Stanley and Goldman Sachs meeting institutional investors in New York, London and Singapore. TechCrunch sources indicate SpaceX is targeting a valuation in the $400-500 billion range, reflecting both Starlink's commercial momentum and its strategic defence relevance.\n\nxAI, Elon Musk's artificial intelligence venture, is expected to follow in Q3 or early Q4, with OpenAI targeting a listing near its reported private valuation of $1 trillion before year-end. If all three proceed, the combined market capitalisation of newly listed AI and space companies in 2026 will exceed anything previously seen in a single calendar year.\n\nOpenAI's IPO preparation has attracted intense scrutiny since the company confirmed its plans. It reported annualised revenue exceeding $20 billion at its last funding round and has been growing users and enterprise customers consistently faster than analyst forecasts.\n\nThe listings will test public market appetite for AI in ways that private funding rounds — dominated by a relatively small number of very large institutional investors — have not captured. Retail investors, pension funds and sovereign wealth funds will be entering the AI investment market at scale for the first time.\n\nSovereign wealth funds from Abu Dhabi and Saudi Arabia are expected among the most significant institutional participants. Mubadala and ADIA have been building positions in frontier AI companies through private markets and are anticipated to be anchor investors in the public offerings.\n\nThe SEC has been examining AI companies' disclosure practices and has issued guidance that companies will need to provide significantly more detailed disclosure about AI-specific risks than has been standard in previous technology IPO filings.", sources:["TechCrunch","MIT Tech Review","Wired"] },
+  ],
+  sports: [
+    { tag:"T20 World Cup", headline:"India beat Pakistan by 61 runs in Colombo as Ishan Kishan stars with 77 — Blues qualify for Super 8", standfirst:"India's commanding T20 World Cup victory over Pakistan at the R. Premadasa Stadium in Colombo, with Ishan Kishan's 77 off 40 balls the centrepiece of a clinical all-round display.", body:"India qualified for the Super 8 stage of the ICC Men's T20 World Cup 2026 with a 61-run victory over Pakistan at the R. Premadasa Stadium in Colombo — the match that had been the most anticipated fixture of the tournament. Ishan Kishan's sparkling 77 off just 40 deliveries powered India to 175/7, a total their bowlers then defended with clinical authority that left Pakistan bowled out for 114 in 18 overs.\n\nKishan launched his innings in style, greeting Shaheen Shah Afridi with a six from the first ball he faced, and maintained that attacking intent throughout. His 46-ball stand of 87 with Tilak Varma — in which he scored 76 of the runs himself — was the innings of the tournament. Saim Ayub was the pick of Pakistan's bowlers with 3/25 but could not prevent India posting a competitive total.\n\nIndia's bowling was equally impressive. All six bowlers used by captain Suryakumar Yadav took wickets, with Jasprit Bumrah, Varun Chakravarthy, Axar Patel and Hardik Pandya all picking up two each. Pakistan folded for 114 in 18 overs.\n\nThe PCB firmly denied it approached the ICC about boycotting the fixture, Gulf News reported, calling reports to that effect irresponsible. Pakistan played all their group matches in Sri Lanka given the political situation between the two countries, with the T20 World Cup being jointly hosted by India and Sri Lanka from February 7 to March 8.\n\nNora Fatehi performed at the T20 World Cup opening ceremony at Wankhede Stadium, Gulf News reported, capturing the intersection of Bollywood glamour and cricket fever that characterises the biggest moments in the sport in India.\n\nThis was India's eighth win in nine T20 World Cup meetings with Pakistan — their only loss coming in the 2021 edition.", sources:["ESPNcricinfo","Gulf News","ESPN"] },
+    { tag:"T20 World Cup", headline:"West Indies' Romario Shepherd takes hat-trick against Scotland at Eden Gardens as Windies qualify for Super 8", standfirst:"Shimron Hetmyer's 64 and Shepherd's brilliant four-wicket haul sealed a comprehensive West Indies victory in Kolkata in one of the tournament's most dramatic individual performances.", body:"West Indies all-rounder Romario Shepherd took a hat-trick in the T20 World Cup group match against Scotland at Eden Gardens in Kolkata, Gulf News reported, sealing a comprehensive Caribbean victory in one of the tournament's most dramatic individual moments. Shepherd's hat-trick — three consecutive wickets in the 18th over — was greeted by a thunderous roar from the packed Kolkata crowd.\n\nShimron Hetmyer's 64 had earlier given West Indies the platform they needed, contributing to a total that proved well beyond Scotland's reach. Shepherd's four-wicket haul then dismantled the Scottish batting lineup, completing a victory that puts the Windies in a strong position to advance from their group.\n\nThe T20 World Cup is being jointly hosted by India and Sri Lanka, with the tournament format dividing 20 teams into groups, the top two from each advancing to the Super Eight phase. The presence of the tournament in India has generated extraordinary public interest, with Eden Gardens providing a fitting backdrop for high-quality cricket.\n\nAbu Dhabi is simultaneously hosting the Masters Games 2026 at Zayed Sports City, Gulf News reported, described as West Asia's largest-ever mass participation multi-sport event for athletes aged 30 and above. The sold-out opening ceremony showcased the UAE's growing reputation as a destination for inclusive international sporting events.\n\nBollywood actress Nora Fatehi's performance at the T20 World Cup opening ceremony at Wankhede Stadium captured the intersection of Indian entertainment and cricket culture that characterises the biggest moments in the sport in India.\n\nThe UAE cricket team is participating in the tournament as part of Group D alongside New Zealand, South Africa, Afghanistan and Canada, representing the country's growing stature in Associate cricket.", sources:["Gulf News","ESPNcricinfo","BBC Sport"] },
+    { tag:"FIFA World Cup 2026", headline:"FIFA World Cup 2026 squads valued at record €17.5 billion as tournament prepares for June 11 opener", standfirst:"The combined market value of all 48 qualifying nations' squads has set an all-time record ahead of a tournament that opens in just over a week across the United States, Canada and Mexico.", body:"The combined estimated market value of squads competing at the 2026 FIFA World Cup has reached a record €17.5 billion, according to Transfermarkt data reported by Emirates 24/7, driven by both the tournament's expanded 48-team format and the sustained inflation in elite footballer valuations.\n\nThe tournament opens on June 11 and is hosted across the United States, Canada and Mexico in the largest World Cup in history. European nations dominate the value rankings, with England, France, Spain and Germany fielding squads whose combined values significantly exceed those of other regions.\n\nThe UAE is competing in their first ever FIFA World Cup, placed in Group D alongside New Zealand, South Africa, Afghanistan and Canada. While the UAE squad's market value is modest compared to the elite nations, the achievement of qualifying is historic for Emirati football and represents the culmination of years of investment in grassroots and elite development.\n\nIndia is also making their World Cup debut, placed in another group and generating extraordinary commercial interest from the country's vast population of sports fans. FIFA estimates that Indian market engagement with the tournament will break all previous records for an Asian nation's debut.\n\nThe format, expanded from 32 to 48 teams, has attracted criticism from some purists who argue the additional matches between elite and emerging nations dilute the competitive quality of the group stage. Tournament organisers counter that the inclusion of nations like India and UAE creates long-term development value for global football.\n\nEuropean broadcasters are investing record amounts in World Cup rights, with the combination of familiar elite nations, new entrants generating their own markets and the North American host nations' large audiences making this the most commercially valuable tournament FIFA has staged.", sources:["ESPN","BBC Sport","ESPNcricinfo"] },
+    { tag:"Formula 1", headline:"Verstappen leads championship as Abu Dhabi Grand Prix season finale confirmed for December", standfirst:"Max Verstappen holds a commanding championship lead heading into the summer break, with the Yas Marina Circuit season finale in December set to be another potential title decider.", body:"Max Verstappen leads the 2026 Formula 1 World Championship by a comfortable margin as the season approaches its summer break, with the Abu Dhabi Grand Prix at the Yas Marina Circuit confirmed as the season finale in December. The Dutchman's consistency has been the defining feature of the season so far.\n\nThe 2026 regulations, which introduced significantly revised power unit specifications, have created a closer competitive field than the past two seasons. Ferrari, Mercedes and McLaren have all demonstrated the ability to challenge at specific circuits. Red Bull has nonetheless managed to convert strong qualifying results into race wins with impressive frequency.\n\nLewis Hamilton's first season with Ferrari has been a mixed picture. The seven-time world champion has shown flashes of brilliance — particularly in wet conditions — but has also struggled to extract maximum performance from the Ferrari's characteristics.\n\nFor UAE motorsport fans, the Abu Dhabi Grand Prix is one of the most significant events in the country's sporting calendar. Organisers have confirmed record hospitality bookings for the 2026 race, reflecting Formula 1's extraordinary commercial popularity in the current era.\n\nThe Abu Dhabi Grand Prix's role as the season finale has given Yas Marina Circuit a unique position in Formula 1 geography. The 2021 finale remains one of the most controversial moments in the sport's history, though Verstappen has since secured three further titles without comparable controversy.\n\nMid-season, several teams are planning significant upgrade packages for the races after the summer break, making the second half potentially more competitive than the first.", sources:["BBC Sport","ESPN","ESPNcricinfo"] },
+    { tag:"Abu Dhabi Sport", headline:"Abu Dhabi Masters Games 2026 draws 15,000 athletes from 100 countries in landmark mass-participation event", standfirst:"The Open Masters Games Abu Dhabi 2026, the largest mass-participation multi-sport event in West Asian history, opened to extraordinary scenes at Zayed Sports City.", body:"The Open Masters Games Abu Dhabi 2026 opened with a sold-out ceremony at Zayed Sports City Stadium, welcoming 15,000 athletes from more than 100 countries for what Gulf News described as West Asia's largest-ever mass participation multi-sport event for athletes aged 30 and above.\n\nThe event spans 50 sports over 10 days, with participants ranging in age from 30 to over 90. Gulf News reported on Zafranah Al Hosani, who is bowling at the Abu Dhabi Masters event and championing women's sport and wellbeing, reflecting the event's commitment to inclusion.\n\nHeritage sports are integrated throughout the programme alongside conventional international competitions — falconry demonstrations, traditional dhow racing alongside modern sailing, and camel racing offer international athletes experiences entirely unique to the Arabian Peninsula.\n\nPara-sports have been integrated throughout the Masters Games programme rather than siloed into a separate para-event, following an inclusive philosophy that the International Paralympic Committee has praised as a model for mainstream sports events. Para-athletes from every continent are competing across multiple disciplines.\n\nEconomic impact assessments estimate the Masters Games will generate approximately AED 800 million in direct spending across hospitality, retail, transport and services — justifying the significant public investment in venues and organisation. The longer-term goal is to establish Abu Dhabi as a default destination for large-scale sports tourism events.\n\nFor many participants, the Masters Games represent something deeply personal. Post-event interviews have returned consistently to the theme of being treated as genuine athletes, having competition taken seriously and feeling part of an international sporting community regardless of age.", sources:["Gulf News","BBC Sport","ESPN"] },
+  ],
+  business: [
+    { tag:"Oil Markets", headline:"Brent crude above $90 as Hormuz closure enters seventh week — energy majors report record revenues", standfirst:"The prolonged Strait closure is delivering extraordinary profits to producers while squeezing consumers globally and creating the most complex monetary policy environment in decades.", body:"Brent crude oil has held above $90 per barrel for seven consecutive weeks as the closure of the Strait of Hormuz continues to constrain global oil supply. Bloomberg's commodity desk reported that the combination of OPEC+ production cuts and lost Iranian export volumes has created a supply shortfall that cannot be quickly remedied even if a ceasefire allows Hormuz to reopen.\n\nSaudi Aramco, ADNOC and other Gulf producers with export routes unaffected by Hormuz are generating revenues that their financial models had not projected for another three to five years. Aramco's investor relations team told Bloomberg that the company's free cash flow in Q1 2026 was the highest in its public company history.\n\nFor energy consumers, the picture is almost uniformly negative. Airlines globally have imposed fuel surcharges that in some cases exceed base ticket prices on certain routes. Shipping costs for container freight have risen 40-60% as vessels reroute around the Cape of Good Hope, adding 10-14 days to Asia-Europe journey times.\n\nThe oil majors — Shell, BP, TotalEnergies, ExxonMobil and Chevron — are generating significantly elevated revenues, but share prices have not risen proportionally. Investors are uncertain about the durability of elevated prices and wary of capital expenditure on new production that may not be needed if a ceasefire brings prices sharply lower.\n\nThe longer-term consequence of the oil price shock may paradoxically be an acceleration of the energy transition. Several major economies have used the Hormuz crisis as political justification for accelerating renewable investment and EV infrastructure.\n\nOPEC+ ministers agreed unanimously to extend existing production cuts through Q3, maintaining supply restrictions and preferring to maximise revenues from the current elevated price environment.", sources:["Bloomberg","Financial Times","WSJ"] },
+    { tag:"Apple", headline:"Apple nears $5 trillion market capitalisation as AI integration drives record services revenue", standfirst:"Apple's stock has risen 34% this year as investors embrace its strategy of integrating AI across its hardware and services ecosystem, creating what analysts call the most defensible AI business model in the industry.", body:"Apple is approaching a $5 trillion market capitalisation milestone, with its stock rising steadily through 2026 on the back of record services revenue and investor confidence in its AI integration strategy. Bloomberg reported Apple's market cap reached $4.87 trillion in pre-market trading — within striking distance of the historic threshold.\n\nApple's AI strategy, branded Apple Intelligence, differs from competitors by focusing on on-device processing that keeps data private, combined with carefully managed cloud components offering enhanced privacy guarantees. This approach has resonated strongly with consumers concerned about data privacy.\n\nServices revenue — comprising the App Store, Apple Music, iCloud, Apple TV+, AppleCare and the rapidly growing Apple Pay and Apple Card businesses — grew 23% year-on-year in the most recent quarter to reach $26.8 billion. This high-margin, recurring revenue stream is the primary driver of Apple's premium valuation.\n\nThe iPhone has been refreshed with AI capabilities driving the strongest upgrade cycle in four years. Consumers who delayed replacing older devices are being persuaded by real-time language translation, context-aware notification management and a substantially improved Siri.\n\nFor the UAE market, Apple's products command exceptional loyalty among the country's affluent, internationally connected consumer base. Apple stores in Dubai Mall and Mall of the Emirates consistently rank among the most productive retail locations globally by revenue per square foot.\n\nThe $5 trillion valuation, when achieved, will prompt inevitable comparisons with the total GDP of major economies — the figure exceeds the GDP of Japan, Germany or the UK individually — renewing debate about whether value concentration in a handful of technology companies represents a healthy or distorting feature of modern capitalism.", sources:["Bloomberg","WSJ","Financial Times"] },
+    { tag:"Goldman Sachs", headline:"Goldman Sachs reports best quarter since 2009 as AI M&A boom and IPO pipeline drive record revenues", standfirst:"The Wall Street bank's extraordinary Q1 reflects the corporate activity around AI investments, technology mergers and preparation for the SpaceX, xAI and OpenAI public listings.", body:"Goldman Sachs reported its best quarterly financial results since the post-financial crisis recovery of 2009, with revenues across investment banking, markets and asset management all beating analyst expectations substantially. Bloomberg reported net revenue reached $18.2 billion for the quarter, with investment banking growing 47% year-on-year.\n\nThe primary driver is the extraordinary level of corporate activity around AI investment. Technology companies have been acquiring AI startups, licensing AI technology and restructuring around AI capabilities at a pace generating large advisory mandates. Goldman advised on 23 AI-related transactions worth more than $1 billion each in the first quarter alone.\n\nThe anticipated IPO wave — SpaceX, xAI and OpenAI all expected to list before year-end — has generated significant revenue from preparatory work: updating SEC registrations, conducting pre-IPO investor briefings and arranging cornerstone investor commitments.\n\nTrading revenues have also been elevated by conflict-driven volatility, with Goldman's commodities desk recording its best quarter in oil and energy derivatives in many years. The combination of elevated prices and significant uncertainty created ideal conditions for a sophisticated trading operation.\n\nDavid Solomon was measured in his optimism during the earnings call, noting that several tailwinds driving current performance are not permanent. The IPO boom will complete itself, M&A cycles eventually slow, and trading volatility driven by geopolitical events typically recedes.\n\nFor the UAE, Goldman's results are relevant through the bank's direct presence in the region. Goldman's Abu Dhabi office has grown significantly as ADGM has developed, and the bank has been advising on major UAE sovereign wealth fund transactions and infrastructure privatisations.", sources:["Bloomberg","WSJ","Financial Times"] },
+    { tag:"Global Trade", headline:"US-China trade deal removes tariffs on $800bn in goods as both sides seek economic stability during Iran crisis", standfirst:"The unexpected breakthrough in US-China trade relations, driven partly by both sides' need for stability during the regional conflict, is the most significant bilateral deal in seven years.", body:"The United States and China signed a landmark trade framework agreement that will remove tariffs on approximately $800 billion in goods over an 18-month transition period. The Wall Street Journal, which broke the story, reported that negotiations accelerated dramatically as both governments recognised the regional conflict had created a moment of shared interest in bilateral stability.\n\nThe deal was reached after marathon negotiations in Geneva under Swiss facilitation, maintaining secrecy that frustrated financial market participants unable to anticipate the announcement. The teams agreed on tariff reductions covering consumer electronics, agricultural products, semiconductors and manufactured goods.\n\nAmerican farmers — among the most vocal supporters of tariff relief given the damage retaliatory Chinese tariffs caused to agricultural exports — are among the immediate winners. Technology hardware companies with complex US-China supply chains will also benefit significantly.\n\nThe geopolitical context matters. The US-Iran conflict reminded both Washington and Beijing that their economies are deeply interconnected through global supply chains, and that simultaneous deterioration of US-China relations would create risks neither government wants to manage alongside the regional crisis.\n\nFinancial markets responded positively, with futures contracts pointing to significant gains in both US and Chinese equities. The dollar strengthened slightly against the yuan, while commodity markets — particularly agricultural products — saw significant price movements.\n\nCritics emerged quickly on both sides. US manufacturers and labour unions argued the tariff reductions expose American industries to Chinese competition that benefits from subsidised capital. Chinese nationalist commentators argued concessions on intellectual property protection were excessive.", sources:["WSJ","Bloomberg","Financial Times"] },
+    { tag:"Fintech", headline:"Revolut crosses 60 million customers globally as US expansion becomes the defining test of its ambitions", standfirst:"The London-based fintech has announced a major US regional bank partnership to accelerate American market entry, setting up a battle with the country's deeply entrenched financial institutions.", body:"Revolut announced its global customer base has crossed 60 million — making it the world's largest fintech by active users — and confirmed a partnership with a US regional banking institution that will underpin its most significant market expansion. The Financial Times, which first reported the partnership, said Revolut's US product will launch with full FDIC-insured deposit accounts by Q3 2026.\n\nThe US banking market is both Revolut's greatest opportunity and most formidable challenge. Americans have shown historical attachment to banking relationships and have been slower than European counterparts to embrace challenger banks. But demographic shifts are working in Revolut's favour — younger Americans are considerably more open to digital-first financial services.\n\nThe partnership structure addresses a fundamental obstacle: obtaining a US banking charter has proved extremely time-consuming, stretching over several years without resolution. By partnering with an existing licensed institution, Revolut can launch a full product quickly while its own charter application continues.\n\nRevolut's ability to execute in the US is being watched closely by European fintech competitors — Nubank, Wise, Monzo — all considering similar expansions. The US market's size makes it essential to long-term valuations, but establishing meaningful presence has deterred most from moving aggressively.\n\nFor UAE-based customers, Revolut's global expansion is largely irrelevant to daily use of the already well-developed UAE product. But the company's US success or failure has indirect implications for its financial strength and continued investment in markets like the UAE.\n\nRevolut CEO Nikolay Storonsky said the company's long-term ambition is to be the first global financial super-app — a single platform where customers manage all financial needs across currencies, countries and asset classes.", sources:["Financial Times","Bloomberg","WSJ"] },
+  ],
+  life: [
+    { tag:"Dubai Dining", headline:"Dubai earns 14 Michelin stars in expanded guide as the city's restaurant scene reaches genuine global maturity", standfirst:"The Michelin Guide's second Dubai edition awards stars across 11 restaurants, including three two-star establishments, confirming the emirate as a premier dining destination.", body:"The Michelin Guide's second Dubai edition awarded 14 stars across 11 restaurants in a significantly stronger showing than the inaugural edition, confirming Dubai's arrival in the first tier of global food cities. Three restaurants received two stars for the first time — a historic milestone — while eight earned single stars and three received the Bib Gourmand designation for exceptional value.\n\nThe two-star restaurants reflect Dubai's culinary breadth: a Japanese omakase counter in DIFC by a chef trained at three-Michelin-starred establishments in Tokyo; a contemporary Arabic restaurant in the old town perfecting Levantine cooking; and a French restaurant on the Palm Jumeirah that reviewers described as matching anything available in Paris.\n\nTime Out Dubai noted that the Michelin results confirm a trend local food critics have observed for years: Dubai's best restaurants are no longer trading primarily on glamour and spectacle, but on genuine cooking quality, sourcing rigour and the kind of culinary point of view that distinguishes great restaurants from merely expensive ones.\n\nThe Indian restaurant community, representing the UAE's largest expatriate culinary category, received two Bib Gourmand awards for establishments in Bur Dubai and Karama offering exceptional regional Indian cooking at reasonable prices — finally receiving the serious critical attention they deserve.\n\nCNN Travel noted that Dubai has become a mandatory stop for serious food tourists from Asia, Europe and the Americas. The city's exceptional connectivity makes it accessible for dedicated food trips that would be logistically difficult for destinations requiring more complex routing.\n\nFor the UAE's broader tourism strategy, Michelin recognition has commercial value extending well beyond the restaurants themselves. High-spending food tourists are among the most economically productive visitors a destination can attract.", sources:["Time Out Dubai","CNN Travel","BBC Life"] },
+    { tag:"Wellness Tourism", headline:"Ras Al Khaimah mountain wellness resorts set global benchmark as mindful tourism redefines Gulf travel", standfirst:"High-altitude wellness retreats in the Hajar Mountains are attracting international visitors seeking experiences that combine Arabia's dramatic landscape with sophisticated therapeutic programmes.", body:"Ras Al Khaimah's mountain wellness sector has emerged as one of the Gulf region's most internationally recognised tourism offerings, with three resorts in the Hajar Mountains receiving recognition in the Global Wellness Institute's annual index. CNN Travel's annual wellness feature placed RAK's mountain resorts among the top 10 wellness destinations globally — the first time any UAE property has appeared in that ranking.\n\nThe appeal of the Hajar Mountain setting is genuine and not easily replicated. The dramatic limestone peaks, reaching nearly 2,000 metres above sea level, provide a climate meaningfully cooler than the coastal UAE even in summer, along with air quality, silence and visual drama absent from the beach and desert settings that characterise most UAE hospitality.\n\nTherapeutic programmes have moved beyond traditional spa models. One property operates a medically supervised longevity programme combining blood biomarker analysis, genetic testing, nutritional counselling and supervised fasting with mountain hiking — an approach comparing with high-end Swiss longevity clinics at a fraction of the cost.\n\nTraditional Arabian healing practices are being integrated thoughtfully. Local practitioners of traditional herbalism maintained within Emirati families for generations have been brought into partnership with resort operators, creating experiences genuinely rooted in local cultural landscape.\n\nBBC Life profiled what it called 'conflict wellness tourism' — the observation that periods of regional tension drive demand for retreat experiences. UAE-based residents are booking mountain retreats at historically high levels, with several resorts reporting waiting lists for popular programme dates.\n\nThe economic impact on Ras Al Khaimah has been significant. The tourism sector now contributes approximately 12% of the emirate's GDP, up from 6% a decade ago.", sources:["CNN Travel","BBC Life","Time Out Dubai"] },
+    { tag:"Arab Fashion", headline:"Arab designers dominate Paris and Milan as a new generation redefines modest fashion for global audiences", standfirst:"Designers from the UAE, Lebanon and Saudi Arabia are winning international recognition by combining Islamic aesthetic traditions with contemporary sensibilities that appeal far beyond Muslim consumers.", body:"The spring-summer 2026 shows in Paris and Milan featured an unprecedented number of Arab designers in prominent positions, with Lebanese-born, Dubai-based designer Reem Acra winning a top international fashion competition award and several Saudi and Emirati brands receiving their first reviews in the European fashion press.\n\nThe new wave differs importantly from its predecessors. Where the earlier generation of Lebanese designers competed primarily in haute couture — extraordinarily expensive gowns for a tiny global clientele — the current generation works across price points, building brands that reach the global middle class through e-commerce and wholesale relationships with international retailers.\n\nModest fashion has emerged as the sector where Arab designers have achieved the most commercially significant breakthrough. The global market is estimated at more than $280 billion annually, with an increasing proportion of spend coming from non-Muslim consumers who prefer covered, elegant options for professional or social occasions.\n\nDubai has been instrumental in creating the infrastructure supporting Arab fashion's international ambitions. Dubai Design District provides workspace and showrooms, while Dubai Fashion Week has established itself as a credible platform for new talent. The emirate's cultural position — connected to both the Gulf Arab world and global fashion through its international population — makes it a natural hub.\n\nTime Out Dubai noted that Eid Al Adha celebrations saw noticeable shifts in what UAE consumers were wearing, with locally designed and Arab-brand clothing more visible than in previous years — reflecting growing cultural confidence among younger Emiratis.\n\nBuilding a fashion brand requires capital, manufacturing relationships, marketing expertise and distribution partnerships that are genuinely difficult to assemble. Several Arab fashion companies have brought in experienced European and American executives while maintaining Arab creative direction.", sources:["BBC Life","CNN Travel","Time Out Dubai"] },
+    { tag:"Travel Safety", headline:"Abu Dhabi maintains world's safest city status for eighth consecutive year despite conflict proximity", standfirst:"Despite the ongoing regional conflict, Abu Dhabi's comprehensive security infrastructure and stable governance have sustained its position as the world's safest major city for visitors and residents.", body:"Abu Dhabi has retained its position at the top of the Economist Intelligence Unit's Safe Cities Index for the eighth consecutive year, a remarkable achievement given the regional security context of the ongoing conflict. The index awarded Abu Dhabi its highest overall score in the ranking's history — a result officials attributed to sustained investment in security infrastructure, healthcare capacity and emergency response systems.\n\nThe contrast between Abu Dhabi's measured calm and the turmoil visible on news broadcasts from elsewhere in the region has been the defining feature of the UAE's tourism communications challenge in 2026. On the factual level, the UAE has not been directly attacked and the conflict's military activities are occurring at a distance from population centres.\n\nCNN Travel's most recent UAE coverage focused on international visitors who arrived during the conflict period and found conditions essentially unchanged from previous visits — bustling malls, packed restaurants, full hotel lobbies and an atmosphere of confident normality that surprised guests who had been consuming alarming media coverage.\n\nThe UAE's tourism authorities have been measured in their response, emphasising facts — no incidents on UAE soil, normal flight operations now restored, full leisure facility availability — while acknowledging that the environment requires monitoring.\n\nHotel occupancy data for the first quarter showed overall occupancy of 77% — below the record 82% in Q1 2025 but still above the long-term average and well ahead of comparable regional destinations. Luxury and ultra-luxury properties performed best, suggesting high-spending international travellers are the least deterred by regional context.\n\nLonger-term, the UAE's ability to maintain its tourism narrative through genuine regional turbulence may prove one of the most valuable demonstrations of the country's resilience and reliability as a destination.", sources:["CNN Travel","BBC Life","Time Out Dubai"] },
+    { tag:"Street Food", headline:"Dubai's street food renaissance brings authentic global flavours to a city historically defined by luxury dining", standfirst:"Independent food operators in Deira and Al Quoz are transforming Dubai's food culture by prioritising authenticity and value over the theatrical fine dining that long defined the city's culinary identity.", body:"Dubai's food culture is undergoing genuine transformation, driven by independent operators who prioritise authenticity and value over high-cost theatrical dining. Time Out Dubai's latest food guide dedicates more than a third of its content to affordable, neighbourhood-level eating — a proportion unthinkable in previous editions focused almost exclusively on luxury destinations.\n\nDeira and Al Quoz have become centres of Dubai's street food renaissance. The former's historic network of lanes around the gold and spice souk hosts an extraordinary concentration of South Asian, Iranian and Levantine cooking representing some of the best eating in the city at any price point. The latter's industrial district has been colonised by creative food operators in a pattern mirroring Hackney in London or Williamsburg in New York.\n\nIndian food — representing the UAE's largest expatriate community's cooking — is finally receiving the serious critical attention it deserves. Several specialist Indian regional restaurants focusing on Chettinad, Malabar, Gujarati or Punjabi traditions rather than generic Indian menus are receiving serious food press coverage for the first time.\n\nCNN Travel noted the growing phenomenon of food-motivated tourism within the UAE, with residents of Abu Dhabi, Sharjah and the northern emirates making day trips to Dubai specifically to eat at particular restaurants — previously a behaviour pattern reserved for luxury establishments, now characterising the independent and street food segment.\n\nThe Michelin recognition, while commercially valuable, has also created a modest backlash among the city's food community. Several prominent food writers and chefs have argued publicly that the Guide's technical precision criteria systematically undervalue culturally significant, community-rooted cooking.\n\nFor the UAE's large Indian expatriate community, the emergence of high-quality regional Indian restaurants represents a cultural as well as culinary development — the ability to eat the food of specific home states and regions provides a connection to cultural identity that matters deeply to long-term residents.", sources:["Time Out Dubai","CNN Travel","BBC Life"] },
+  ],
+  markets: [
+    { tag:"Global Equities", headline:"Global stocks hold near records as AI trade insulates markets from oil shock — Fed decision looms", standfirst:"Stock markets worldwide are defying conventional wisdom that an oil shock of this magnitude should trigger a recession, with AI-driven productivity gains sustaining record valuations.", body:"Global equity markets held near record highs as investors continued to look through the geopolitical turbulence and maintain their conviction in the AI-driven productivity story. The S&P 500 has maintained levels that would have seemed implausible 18 months ago, with technology stocks leading by a significant margin.\n\nThe resilience of equities in the face of an oil price shock that would historically have been expected to cause a significant economic slowdown has been the defining investment puzzle of 2026. Bloomberg's market commentary pointed to two factors: genuine productivity improvements delivered by AI, and the very different energy intensity of modern economies compared with those of the 1970s.\n\nTechnology stocks have led the market rally with particular force. The Magnificent Seven — Apple, Microsoft, Alphabet, Amazon, Meta, Nvidia and Tesla — have collectively added more than $4 trillion in market capitalisation since the start of 2026, with Nvidia's extraordinary revenue growth and Apple's approach to the $5 trillion valuation milestone the standout stories.\n\nThe Federal Reserve's posture has been critical to sustaining the equity rally. By holding rates steady rather than raising them in response to oil-driven inflation, the Fed has implicitly signalled that it views the current inflationary pressure as a supply-side shock that monetary tightening cannot address effectively.\n\nAsian markets have been particularly strong, with Taiwan's TAIEX and South Korea's KOSPI both reaching record highs driven by extraordinary demand for semiconductor and AI hardware products. TSMC reported revenue growth of 43% year-on-year in the most recent quarter.\n\nThe bond market tells a somewhat different story, with US Treasury yields having risen modestly as inflation expectations increase. This divergence between equity market optimism and bond market caution is unusual and has attracted significant commentary from market strategists.", sources:["Bloomberg","CNBC","Financial Times"] },
+    { tag:"Federal Reserve", headline:"Fed holds rates as May minutes reveal a committee more divided than markets appreciated", standfirst:"Minutes from the Federal Reserve's most recent policy meeting show a genuinely contested debate about the appropriate response to energy-driven inflation in an AI-boom economy.", body:"Minutes from the Federal Reserve's most recent policy meeting, released Monday, reveal a central bank more divided than financial markets had previously appreciated about the appropriate response to inflationary pressure from the Iran conflict's oil shock. While the committee voted unanimously to hold rates at the current level, the minutes show several members argued strongly for pre-emptive rate increases.\n\nThe hawks on the committee pointed to the historical tendency of energy price inflation to spread into core prices over time, particularly when labour markets remain tight. They argued that the Fed's credibility requires it to act before inflation becomes entrenched rather than waiting for evidence of broadening that may arrive too late.\n\nThe doves responded that the current situation is structurally different from previous oil shocks because the AI productivity boom is genuinely offsetting some of the cost pressure, and because rate increases would affect the AI investment sector — which operates with significant leverage — before they reached the energy consumption patterns driving inflation.\n\nGov. Waller's comments about stablecoins — that they could extend the reach of US dollar monetary policy — were interpreted by some analysts as a signal that the Fed is increasingly attentive to the evolving role of digital financial infrastructure in the monetary system.\n\nCNBC's Fed coverage noted the minutes show unanimous agreement on one point: the committee will watch the June employment report with unusual intensity, treating it as a critical data point that could significantly shift the balance of opinion on whether a rate adjustment is warranted.\n\nFor financial markets, the minutes confirm that the Fed's next move could be in either direction — a genuine two-way risk that bond options markets have been pricing more explicitly in recent weeks.", sources:["Bloomberg","CNBC","Financial Times"] },
+    { tag:"Brent Crude", headline:"Brent holds above $90 as Hormuz restrictions ease partially — OPEC+ maintains production discipline", standfirst:"Oil markets are tracking cautious optimism following signs of progress toward de-escalation in Lebanon, though the Strait of Hormuz remains a critical uncertainty keeping prices elevated.", body:"Brent crude oil is holding above $90 per barrel as markets process a complex set of signals: modest de-escalation in Lebanon following Trump's statement about Beirut and Hezbollah's fire pause, partial easing of UAE airspace restrictions signalling improving conditions, and ongoing uncertainty about Hormuz's full reopening timeline.\n\nOPEC+ has maintained its production cut arrangement, with member states uniformly reluctant to increase supply into what remains a technically tight market. Saudi Arabia and the UAE are both generating record revenues at current price levels and have no immediate fiscal incentive to push prices lower.\n\nThe partial easing of UAE airspace restrictions is commercially significant for energy markets because it signals that the operational environment in the Gulf is gradually normalising even before a formal ceasefire is achieved. Several tanker operators have been assessing whether conditions have improved sufficiently to resume Gulf transits.\n\nUS crude oil inventory data released this week will provide an important signal about the balance between supply disruption and demand moderation. Several analysts expect inventory drawdowns to have continued, which would be supportive of current price levels.\n\nNatural gas markets in Europe have been more volatile than oil, with LNG prices spiking on fears that the conflict could disrupt Qatari exports critical to European winter storage filling. Qatar has maintained its gas export operations throughout the conflict period.\n\nCurrency markets are reflecting the risk environment with the dollar maintaining strength against most emerging market currencies, though the UAE dirham's peg to the dollar has provided stability for UAE-based businesses and investors.", sources:["Bloomberg","Financial Times","CNBC"] },
+    { tag:"India Markets", headline:"Nifty 50 earnings grow 4% for eighth consecutive quarter — brokerages see structural quality in steady gains", standfirst:"India's benchmark corporate earnings have maintained steady single-digit growth for two full years, a pattern analysts increasingly read as a mark of resilience rather than underperformance.", body:"Nifty 50 companies reported 4% year-on-year growth in profit after tax for the most recent quarter, marginally ahead of analyst expectations and marking the eighth consecutive quarter of single-digit earnings growth, according to brokerage research reported by NDTV Business. The consistency of the earnings trajectory is being increasingly read as evidence of structural earnings quality rather than merely moderate growth.\n\nIndia's markets are entering June with reasonably positive momentum, with foreign institutional investors maintaining net positive flows into Indian equities despite the global uncertainty. The Sensex and Nifty both reflect investor confidence in India's long-term growth story, though intraday volatility has increased.\n\nThe data centre sector is attracting particular investor attention following Nomura's 30% CAGR projection through 2030. Listed companies with exposure to data centre construction, electrical infrastructure and cooling systems have seen elevated trading volumes as investors position for what the brokerage describes as a 'decadal opportunity.'\n\nWipro's Aggne Global acquisition is being watched as an indicator of the Indian IT sector's acquisition strategy. If the company can demonstrate that domain-specific AI acquisitions in financial services generate superior margin profiles compared to traditional services work, it could trigger a wave of similar transactions.\n\nGold prices in the UAE eased slightly on Tuesday as a stronger US dollar weighed on bullion, though safe-haven demand linked to the regional conflict has kept prices elevated by historical standards. Dubai 24 carat gold is trading well above year-ago comparisons.\n\nThe OFS issue from a significant company remains open for subscription from June 3 to 5, with a price band set at ₹182 to ₹192 per share, Pulse by Zerodha reported.", sources:["Bloomberg","CNBC","Financial Times"] },
+    { tag:"Crypto", headline:"Bitcoin holds above $100,000 as institutional adoption deepens despite geopolitical market turbulence", standfirst:"The world's largest cryptocurrency has maintained six-figure pricing through the Middle East conflict, supported by institutional buying and growing demand from conflict-adjacent populations.", body:"Bitcoin has sustained its position above $100,000 through weeks of Middle East conflict and financial market uncertainty, consolidating the argument among institutional investors that the asset has earned a place in diversified portfolios as a genuinely uncorrelated store of value. CNBC's crypto desk reported that institutional inflows into Bitcoin ETFs have continued even as some risk assets have sold off.\n\nThe conflict dynamic has created an interesting demand pattern. Wealthy individuals in conflict-affected areas who are uncertain about banking system continuity or local currency stability have historically shown elevated interest in Bitcoin during periods of geopolitical stress. On-chain analytics firms have reported elevated activity from Gulf region IP addresses.\n\nEthereum has also performed reasonably through the conflict period, supported by the growth of decentralised finance applications and the continued maturation of its staking ecosystem.\n\nThe regulatory environment for digital assets continues to evolve in ways broadly positive for institutional participation. The UAE's Virtual Assets Regulatory Authority has become a global reference point for thoughtful crypto regulation, with several major exchanges expanding their Abu Dhabi and Dubai operations significantly.\n\nStablecoin legislation in the US Congress is approaching a critical vote, with Bloomberg reporting broad bipartisan support for a framework establishing clear requirements for stablecoin issuers. Passage would remove a significant regulatory overhang for the broader crypto market.\n\nGold, which competes with Bitcoin for safe-haven allocation from some investor segments, has also performed strongly during the conflict period. The two assets have shown a modest positive correlation during the current crisis, suggesting both are benefiting from elevated geopolitical risk premium.", sources:["Bloomberg","CNBC","Financial Times"] },
+  ],
+  entertainment: [
+    { tag:"Cannes 2026", headline:"Alia Bhatt dazzles Cannes 2026 red carpet with multiple extraordinary looks as Indian cinema shines", standfirst:"The Bollywood superstar made headlines across the French Riviera with show-stopping appearances — from a Tarun Tahiliani ivory silhouette to a rare 168-carat pink necklace — cementing her status as a global style icon.", body:"Alia Bhatt's presence at the 2026 Cannes Film Festival has dominated international entertainment coverage, with the actress delivering multiple extraordinary red carpet appearances that trended globally across social media. Pinkvilla documented her looks across the festival days: a custom Danielle Frankel ensemble with seven high jewels, a custom Tarun Tahiliani ivory silhouette worn with a traditional nose ring, a custom Tamara Ralph peach haute couture gown paired with a rare 168-carat pink necklace, and a dreamy custom gown on her final evening.\n\nThe response from the global fashion press has been overwhelmingly positive, with Vogue, Harper's Bazaar and WWD all running extensive coverage. Bhatt's ability to move between Western haute couture and distinctly Indian aesthetic choices was highlighted as a model for how Indian celebrities can navigate global fashion platforms while maintaining cultural authenticity.\n\nBeyond the fashion coverage, Bhatt's Cannes presence had cinematic significance. She attended the premiere of an Indian co-production competing in a festival sidebar section, marking another step in India's growing presence in European film culture. The film has received warm reviews from the French press.\n\nFor the UAE's large Indian expatriate community, Bhatt's Cannes moment generated enormous social media engagement. Fans from across the Gulf shared and celebrated her appearances extensively.\n\nBhatt joins a tradition of Indian actresses who have used Cannes as a platform to build international visibility, following Aishwarya Rai Bachchan who has attended for more than two decades. But where earlier generations attended primarily as guests, Bhatt's presence reflects deeper engagement with the festival as a genuine participant in the global film conversation.\n\nNDTV Entertainment noted that Bhatt's Cannes appearances generated more social media impressions than any previous Indian celebrity appearance at the festival, reflecting the growth of Indian entertainment's global audience.", sources:["Pinkvilla","NDTV","Variety"] },
+    { tag:"OTT Release", headline:"Dhurandhar 2 streams on JioHotstar from June 5 with special uncut version of Ranveer Singh espionage thriller", standfirst:"The highly anticipated sequel to the hit espionage franchise arrives on JioHotstar with a special digital premiere and an extended raw cut offering additional footage for subscribers.", body:"Dhurandhar 2: The Revenge, directed by Aditya Dhar and starring Ranveer Singh alongside Sanjay Dutt, R. Madhavan, Akshaye Khanna and Arjun Rampal, is set to stream on JioHotstar from June 5, with a special digital premiere on June 4 at 7pm, Pinkvilla reported. The film serves as the final installment of the duology following the success of the first Dhurandhar.\n\nThe JioHotstar release will include an extended uncut version titled 'Dhurandhar: The Revenge (Raw & Undekha)' offering additional footage, more intense action sequences and uncensored dialogues — a format that has proven commercially effective for previous action franchises on the platform.\n\nRanveer Singh's role in the sequel has been the subject of considerable fan anticipation. Early trade reviews suggest he has raised his game significantly for the sequel, with director Aditya Dhar — who previously made Uri: The Surgical Strike — having established himself as the pre-eminent director of India's patriotic action genre.\n\nThe supporting cast represents an extraordinary assembly of Bollywood talent. Sanjay Dutt, R. Madhavan and Akshaye Khanna each bring established screen personas to roles specifically written to exploit their particular qualities, and early trade reviews note the ensemble dynamic is one of the film's strongest features.\n\nFor UAE-based Indian film fans, the JioHotstar release creates immediate accessibility regardless of theatrical availability. The platform's penetration among the Indian expatriate community in the Gulf has grown significantly over the past two years, and major Bollywood releases consistently generate social media discussion across UAE Indian community groups within hours of going live.\n\nThe film's dual-version approach — mainstream cut and raw uncut — allows JioHotstar to market the release to both mainstream audiences and the dedicated fanbase that seeks the more visceral, uncompromised version of action franchises.", sources:["Pinkvilla","NDTV","Variety"] },
+    { tag:"Hollywood", headline:"Super Mario Galaxy Movie opens in UAE cinemas to strong family audiences as animated sequel impresses", standfirst:"The visually spectacular sequel to 2023's blockbuster Mario film has arrived in UAE cinemas, delivering a fun space adventure that improves on its predecessor with richer world-building and stronger character moments.", body:"The Super Mario Galaxy Movie has opened in UAE cinemas to strong family audiences, building on the extraordinary success of the 2023 original that became one of the highest-grossing animated films in history. Gulf News described the film as a fun, visually spectacular sequel packed with fan favourites, noting that the space settings inspired by the beloved Nintendo Wii game give the animation team extraordinary creative freedom.\n\nThe film takes Mario and his friends beyond the Mushroom Kingdom into a cosmic adventure involving the galaxies from the original game. The distinctive aesthetic — planetoid environments, gravity-defying action, orchestral soundtrack — translates beautifully to the big screen, providing a visual experience critics and audiences have praised as among the most inventive animated cinema of recent years.\n\nUAE cinemas have reported strong opening weekend performance, with family bookings particularly driving occupancy. The film's universal appeal — requiring no prior knowledge of the game series to enjoy, while rewarding longtime fans — makes it the kind of release that crosses demographic lines commercially valuable for exhibitors competing with streaming platforms.\n\nFor children in the UAE's international school community — where Nintendo remains one of the most universally recognised entertainment brands across nationalities — the Mario Galaxy film is an event with social currency extending well beyond the cinema experience itself.\n\nThe film's success also reflects the growing importance of video game IP as source material for Hollywood. Following the Mario franchise's extraordinary commercial performance and The Last of Us's success on television, studios are competing aggressively for rights to beloved game properties.\n\nThe UAE's cinema sector has had an eventful first half of 2026, with strong Hollywood releases, growing Bollywood theatrical ambitions and developing local Arabic-language productions creating a more diverse exhibition landscape.", sources:["Variety","Gulf News","Pinkvilla"] },
+    { tag:"HBO Series", headline:"Game of Thrones prequel Dunk and Egg debuts on HBO to warm reviews — a gentler, character-driven Westeros story", standfirst:"The new Game of Thrones spin-off following hedge knight Ser Duncan the Tall and young Aegon Targaryen has been praised for its intimate storytelling and lighter tone compared to its predecessors.", body:"HBO's Game of Thrones prequel series Dunk and Egg has made its debut to warm critical reception, with reviewers praising its decision to explore a quieter, more character-focused corner of the Westeros universe. Gulf News described it as a character-driven Westeros story exploring chivalry, loyalty and unlikely friendship, noting that the lower-stakes setting allows for a more intimate kind of storytelling that the franchise has not previously attempted.\n\nThe series is based on George R.R. Martin's Tales of Dunk and Egg novellas, set approximately 90 years before Game of Thrones. The protagonist, Ser Duncan the Tall, navigates a Westeros very different from the one viewers know. His squire, Egg, is the young Aegon Targaryen who will eventually become king — a secret that Dunk is initially unaware of.\n\nGulf News reported on young star Dexter Ansell, who plays Egg, noting that the 11-year-old actor spent his time between takes playing chess, Mario Kart and visiting arcades on set — a humanising profile that has resonated warmly with fans who followed the casting with intense interest.\n\nFor UAE viewers with HBO Max subscriptions, the show is immediately accessible and has been generating significant social media discussion among the UAE's substantial Western expatriate community — many of whom are dedicated Game of Thrones fans.\n\nThe show's existence represents a significant bet by HBO on the continued commercial viability of the Westeros universe, which took a severe reputational blow from the controversial final season in 2019. House of the Dragon partially rehabilitated the franchise, and Dunk and Egg appears positioned to consolidate that recovery.\n\nMartin himself has been publicly enthusiastic about the adaptation, writing that the production has captured the spirit of the novellas in ways that exceeded his expectations — a warmly noted response given the fraught history of his relationship with the Game of Thrones television production.", sources:["Variety","Gulf News","Pinkvilla"] },
+    { tag:"Bollywood Honours", headline:"Deepika Padukone named to Hollywood Walk of Fame class of 2026 — first Indian actress to receive the honour", standfirst:"The Bollywood superstar will receive a star on Hollywood Boulevard, joining Emily Blunt, Timothée Chalamet and Rachel McAdams in the most diverse Walk of Fame class in the honour's 65-year history.", body:"Deepika Padukone has been named among the 2026 inductees of the Hollywood Walk of Fame, becoming the first Indian actress to receive the honour in the ceremony's 65-year history. The announcement was made by the Hollywood Chamber of Commerce, with Padukone named in the Motion Pictures category alongside Emily Blunt, Timothée Chalamet, Rachel McAdams, Rami Malek and Gordon Ramsay in a class of 35 names.\n\nThe recognition caps a remarkable international career trajectory. Padukone made her Hollywood debut in 2017 opposite Vin Diesel in XXX: Return of Xander Cage and has since built a global profile through Bollywood blockbusters, international festival appearances and luxury brand partnerships. Her role in Kalki 2898 AD demonstrated her ability to anchor pan-India productions at the highest commercial scale.\n\nIn India and across the Indian diaspora, the announcement generated an immediate outpouring of pride and celebration. Bollywood colleagues, politicians and fans described the honour as a recognition not just of Padukone personally but of Indian cinema's growing global significance. PM Modi offered congratulations in a widely shared post.\n\nFor the UAE's Indian community, the news arrived alongside Alia Bhatt's Cannes appearances, creating what entertainment observers described as an extraordinary double moment of international recognition for Indian female talent within days of each other.\n\nThe Walk of Fame star ceremony — the actual installation on Hollywood Boulevard — is expected later in 2026, with dates yet to be confirmed. Padukone's ceremony is expected to attract one of the largest crowds in the event's recent history.\n\nPadukone's management indicated she will attend in person and that the occasion will be used to announce further international projects — the Walk of Fame honour is a milestone on an ongoing international trajectory rather than a culminating moment.", sources:["Variety","Pinkvilla","NDTV"] },
+  ],
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// UI ENGINE — never changes
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const ORDER = ["mideast-uae","uae","subcontinent","world","tech","sports","business","life","markets","entertainment"];
+let currentPage = "home";
+let currentSection = null;
+let openStartTime = Date.now();
+
+// Utility
+function img(sid, idx) {
+  return FALLBACK[sid]?.[idx % (FALLBACK[sid]?.length || 1)] || FALLBACK.world[0];
+}
+function readTime(body) {
+  const words = (body || "").split(/\s+/).length;
+  return Math.max(3, Math.round(words / 200));
+}
+function setCssVar(el, color) {
+  el.style.setProperty('--section-color', color);
+}
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Badges HTML
+function badgesHtml(sources) {
+  return `<div class="badges">${(sources||[]).map(s=>`<span class="badge">${escHtml(s)}</span>`).join('')}</div>`;
+}
+
+// ── Build nav ──────────────────────────────────────────────────────────
+function buildNav() {
+  const nav = document.getElementById('primary-nav');
+  const menu = document.getElementById('menu-nav');
+  const footer = document.getElementById('footer-nav');
+
+  const homeBtn = `<button class="nav-btn active" data-page="home" onclick="navigateTo('home')">Home</button>`;
+  nav.innerHTML = homeBtn + SECTIONS.map(s =>
+    `<button class="nav-btn" data-page="${s.id}" style="--section-color:${s.color}" onclick="navigateTo('${s.id}')">${s.label.split('—')[0].trim()}</button>`
+  ).join('');
+
+  menu.innerHTML = `<button class="menu-item" data-page="home" onclick="navigateTo('home');closeMenu()">
+    <span>Home</span>
+  </button>` + SECTIONS.map(s => `
+    <button class="menu-item" data-page="${s.id}" onclick="navigateTo('${s.id}');closeMenu()">
+      <span>${s.label}</span>
+      <span class="menu-item-sub">${s.tagline.split('·')[0].trim()}</span>
+    </button>
+  `).join('');
+
+  footer.innerHTML = SECTIONS.map(s =>
+    `<button onclick="navigateTo('${s.id}')">${s.label.split('—')[0].trim()}</button>`
+  ).join('');
+
+  // Build scrolling ticker — duplicate items for seamless loop
+  const tickerItems = TICKER.split(' · ');
+  const scroll = document.getElementById('ticker-scroll');
+  if (scroll) {
+    // Build two copies for seamless infinite scroll
+    const buildItems = () => tickerItems.map(t =>
+      `<span class="ticker-item">${escHtml(t)}</span><span class="ticker-divider">◆</span>`
+    ).join('');
+    scroll.innerHTML = buildItems() + buildItems();
+  }
+  document.getElementById('refresh-stamp').textContent = REFRESH_TIMESTAMP;
+  document.getElementById('today-date').textContent =
+    new Date().toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+
+// ── Update active nav ─────────────────────────────────────────────────
+function updateNav(page) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  document.querySelectorAll('.menu-item').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+}
+
+// ── Navigate ──────────────────────────────────────────────────────────
+function navigateTo(pageId, articleData) {
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  currentPage = pageId;
+  updateNav(pageId);
+
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('section-page').style.display = 'none';
+  document.getElementById('article-reader').style.display = 'none';
+  document.getElementById('progress-bar').style.display = 'none';
+
+  if (pageId === 'home') {
+    document.getElementById('home-page').style.display = 'block';
+  } else if (articleData) {
+    openArticle(articleData, pageId);
+  } else {
+    renderSectionPage(pageId);
+    document.getElementById('section-page').style.display = 'block';
+  }
+}
+
+// ── Home page ─────────────────────────────────────────────────────────
+function buildHomePage() {
+  const home = document.getElementById('home-page');
+  home.innerHTML = ORDER.map(sid => sectionBlockHtml(sid)).join('');
+}
+
+function sectionBlockHtml(sid) {
+  const sec = SECTIONS.find(s => s.id === sid);
+  const arts = NEWS[sid] || [];
+  if (!arts.length) return '';
+
+  return `
+  <section class="section-block" data-section-id="${sid}" style="--section-color:${sec.color}">
+    <div class="section-header">
+      <div class="section-flag">
+        <span class="section-name">${escHtml(sec.label)}</span>
+        <span class="section-tagline">${escHtml(sec.tagline)}</span>
+      </div>
+      <button class="section-more" onclick="navigateTo('${sid}')">More ${escHtml(sec.label.split('—')[0].trim())} →</button>
+    </div>
+    <div class="section-rule"></div>
+    <div class="section-grid">
+      <!-- Col 1: Lead -->
+      <div class="col-2">
+        ${leadCardHtml(arts[0], sid, 0)}
+      </div>
+      <!-- Col 2: 2 medium -->
+      <div class="col-3">
+        ${arts.slice(1,3).map((a,i) => medCardHtml(a, sid, i+1)).join('')}
+      </div>
+      <!-- Col 3: small -->
+      <div class="col-4">
+        ${arts.slice(3,4).map(a => smallCardHtml(a, sid)).join('')}
+      </div>
+      <!-- Col 4: small -->
+      <div>
+        ${arts.slice(4,5).map(a => smallCardHtml(a, sid)).join('')}
+      </div>
+    </div>
+  </section>`;
+}
+
+function leadCardHtml(a, sid, idx) {
+  const imgSrc = img(sid, idx);
+  return `
+  <article class="card-lead" onclick="openArticle(${safeJson(a,'.')}, '${sid}')">
+    <div class="lead-img-wrap">
+      <img class="lead-img" src="${escHtml(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">
+    </div>
+    <div class="lead-border">
+      <span class="art-tag">${escHtml(a.tag)}</span>
+    </div>
+    <h2 class="lead-headline">${escHtml(a.headline)}</h2>
+    <p class="lead-standfirst">${escHtml(a.standfirst)}</p>
+    <p class="lead-preview">${escHtml(a.body.split('\n\n')[0].slice(0,200))}…</p>
+    ${badgesHtml(a.sources)}
+  </article>`;
+}
+
+function medCardHtml(a, sid, idx) {
+  const imgSrc = img(sid, idx);
+  return `
+  <article class="card-med" onclick="openArticle(${safeJson(a,'.')}, '${sid}')">
+    <img class="med-img" src="${escHtml(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">
+    <span class="art-tag">${escHtml(a.tag)}</span>
+    <h3 class="med-headline">${escHtml(a.headline)}</h3>
+    <p class="med-standfirst">${escHtml(a.standfirst)}</p>
+    ${badgesHtml(a.sources)}
+  </article>`;
+}
+
+function smallCardHtml(a, sid) {
+  const imgSrc = img(sid, 3);
+  return `
+  <article class="card-small" onclick="openArticle(${safeJson(a,'.')}, '${sid}')">
+    <div class="small-bar"></div>
+    <div class="small-content">
+      <span class="art-tag">${escHtml(a.tag)}</span>
+      <h4 class="small-headline">${escHtml(a.headline)}</h4>
+      ${badgesHtml(a.sources)}
+    </div>
+    <img class="small-img" src="${escHtml(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">
+  </article>`;
+}
+
+// Safe JSON for onclick attributes
+function safeJson(obj, dotPath) {
+  const id = 'art_' + Math.random().toString(36).slice(2);
+  window._artCache = window._artCache || {};
+  window._artCache[id] = obj;
+  return `window._artCache['${id}']`;
+}
+
+// ── Section page ─────────────────────────────────────────────────────
+function renderSectionPage(sid) {
+  const sec = SECTIONS.find(s => s.id === sid);
+  const arts = NEWS[sid] || [];
+  const el = document.getElementById('section-page');
+  el.style.setProperty('--section-color', sec.color);
+
+  el.innerHTML = `
+  <div class="section-page-header">
+    <div class="section-header">
+      <div class="section-flag">
+        <span class="section-name" style="font-size:20px">${escHtml(sec.label)}</span>
+        <span class="section-tagline">${escHtml(sec.tagline)}</span>
+      </div>
+    </div>
+    <div class="section-rule"></div>
+    <div class="section-page-sources">
+      <span>Sources:</span>
+      ${sec.sources.split(', ').map(s => `<span class="badge">${escHtml(s)}</span>`).join('')}
+    </div>
+  </div>
+
+  <!-- Lead + sidebar -->
+  <div class="section-page-grid">
+    <div>
+      ${leadCardHtml(arts[0], sid, 0)}
+    </div>
+    <div class="section-sidebar">
+      <p class="section-sidebar-label">More Stories</p>
+      ${arts.slice(1).map(a => smallCardHtml(a, sid)).join('')}
+    </div>
+  </div>
+
+  <!-- More articles grid -->
+  <div class="section-more-grid">
+    ${arts.slice(1).map((a,i) => medCardHtml(a, sid, i+1)).join('')}
+  </div>`;
+}
+
+// ── Article reader ────────────────────────────────────────────────────
+function openArticle(a, sid) {
+  window.scrollTo({top: 0});
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('section-page').style.display = 'none';
+  document.getElementById('article-reader').style.display = 'block';
+
+  const sec = SECTIONS.find(s => s.id === sid);
+  const imgSrc = img(sid, 0);
+  const paras = (a.body || '').split('\n\n').filter(Boolean);
+  const rt = readTime(a.body);
+  const reader = document.getElementById('article-reader');
+  reader.style.setProperty('--section-color', sec.color);
+
+  // Show progress bar
+  const pb = document.getElementById('progress-bar');
+  pb.style.display = 'block';
+  pb.style.width = '0%';
+
+  reader.innerHTML = `
+  <div class="reader-wrap">
+    <button class="reader-back" onclick="navigateTo('${sid}')">← ${escHtml(sec.label.split('—')[0].trim())}</button>
+
+    <div class="reader-tag">
+      <span class="art-tag" style="color:${sec.color}">${escHtml(a.tag)}</span>
+    </div>
+
+    <h1 class="reader-headline">${escHtml(a.headline)}</h1>
+
+    <div class="reader-standfirst">${escHtml(a.standfirst)}</div>
+
+    <div class="reader-meta">
+      <span class="reader-meta-item">🕐 <span class="reader-read-time">${rt} min read</span></span>
+      <span class="reader-meta-sep">·</span>
+      <span class="reader-meta-item">Synthesised by Claude AI</span>
+      <span class="reader-meta-sep">·</span>
+      <span class="reader-meta-item">${escHtml(REFRESH_TIMESTAMP)}</span>
+    </div>
+
+    <div class="reader-img-wrap">
+      <img class="reader-img" src="${escHtml(imgSrc)}" alt="" onerror="this.parentElement.style.display='none'">
+      <p class="reader-img-credit">Sources: ${escHtml((a.sources||[]).join(' · '))}</p>
+    </div>
+
+    <div class="reader-body">
+      ${paras.map(p => `<p>${escHtml(p)}</p>`).join('')}
+    </div>
+
+    <div class="reader-attribution">
+      This article was independently synthesised by Claude AI from reporting by <strong>${escHtml((a.sources||[]).join(', '))}</strong>. It is an original editorial composition — not a reproduction of any single source.
+    </div>
+
+    <div class="reader-related">
+      <p class="reader-related-title">More from ${escHtml(sec.label)}</p>
+      <div class="related-grid">
+        ${(NEWS[sid]||[]).filter(x=>x.headline!==a.headline).slice(0,3).map((x,i)=>medCardHtml(x,sid,i+1)).join('')}
+      </div>
+    </div>
+  </div>`;
+
+  // Reading progress bar
+  window.addEventListener('scroll', updateProgress);
+}
+
+function updateProgress() {
+  const pb = document.getElementById('progress-bar');
+  if (!pb || pb.style.display === 'none') return;
+  const el = document.getElementById('article-reader');
+  if (!el || el.style.display === 'none') { window.removeEventListener('scroll', updateProgress); return; }
+  const total = el.scrollHeight - window.innerHeight;
+  const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+  pb.style.width = Math.min(100, pct) + '%';
+}
+
+// ── Menu ──────────────────────────────────────────────────────────────
+function openMenu() { document.getElementById('menu-overlay').classList.add('open'); }
+function closeMenu() { document.getElementById('menu-overlay').classList.remove('open'); }
+
+// ── Time ago ──────────────────────────────────────────────────────────
+function updateTimeAgo() {
+  const s = Math.floor((Date.now() - openStartTime) / 1000);
+  const ta = document.getElementById('time-ago');
+  if (!ta) return;
+  if (s < 60) ta.textContent = '(opened just now)';
+  else if (s < 3600) ta.textContent = `(opened ${Math.floor(s/60)}m ago)`;
+  else ta.textContent = `(opened ${Math.floor(s/3600)}h ago)`;
+}
+
+// ── Refresh ──────────────────────────────────────────────────────────
+function triggerRefresh() {
+  if (isFetching) return;
+  const btn = document.getElementById('refresh-btn');
+  const existing = document.getElementById('refresh-dropdown');
+  if (existing) { existing.remove(); return; }
+
+  // Show dropdown
+  const rect = btn.getBoundingClientRect();
+  const dd = document.createElement('div');
+  dd.id = 'refresh-dropdown';
+  dd.style.cssText = `position:fixed;top:${rect.bottom + 6}px;right:${window.innerWidth - rect.right}px;background:#fff;border:1px solid #d0cdc4;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:9999;min-width:280px;font-family:var(--sans);`;
+  dd.innerHTML = `
+    <div style="padding:10px 14px 8px;border-bottom:2px solid #9a7b3a;">
+      <div style="font-size:10px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#9a7b3a;">Choose Refresh Type</div>
+    </div>
+    <button onclick="document.getElementById('refresh-dropdown').remove();doRefresh(['mideast-uae','uae','subcontinent','markets'])"
+      style="width:100%;background:none;border:none;border-bottom:1px solid #e8e5de;padding:14px 16px;text-align:left;cursor:pointer;display:block;"
+      onmouseover="this.style.background='#f5f0e4'" onmouseout="this.style.background='none'">
+      <div style="font-size:12px;font-weight:700;color:#1a1a18;margin-bottom:3px;">⚡ Quick Refresh</div>
+      <div style="font-size:11px;color:#8a8a80;">Gulf Slate, UAE, Subcontinent, Bourse & Yield</div>
+      <div style="font-size:10px;color:#9a7b3a;margin-top:3px;font-weight:600;">~$0.08 · ~60 seconds</div>
+    </button>
+    <button onclick="document.getElementById('refresh-dropdown').remove();doRefresh(['mideast-uae','uae','subcontinent','world','tech','sports','business','life','markets','entertainment'])"
+      style="width:100%;background:none;border:none;border-bottom:1px solid #e8e5de;padding:14px 16px;text-align:left;cursor:pointer;display:block;"
+      onmouseover="this.style.background='#f5f0e4'" onmouseout="this.style.background='none'">
+      <div style="font-size:12px;font-weight:700;color:#1a1a18;margin-bottom:3px;">↻ Full Refresh</div>
+      <div style="font-size:11px;color:#8a8a80;">All 10 sections refreshed</div>
+      <div style="font-size:10px;color:#9a7b3a;margin-top:3px;font-weight:600;">~$0.20 · ~3 minutes</div>
+    </button>
+`;
+  document.body.appendChild(dd);
+
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', function closeDD(e) {
+      if (!dd.contains(e.target) && e.target !== btn) {
+        dd.remove();
+        document.removeEventListener('click', closeDD);
+      }
+    });
+  }, 100);
+}
+
+function showSettingsModal() {
+  const existing = document.getElementById('settings-modal');
+  if (existing) existing.remove();
+  const currentKey = localStorage.getItem('gulf_epoch_api_key') || '';
+  const modal = document.createElement('div');
+  modal.id = 'settings-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(26,26,24,0.6);display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML = `
+    <div style="background:#fff;max-width:440px;width:90%;padding:28px;font-family:var(--sans);">
+      <h2 style="font-family:var(--serif);font-size:20px;font-weight:800;margin-bottom:4px;color:#1a1a18;">API Key Settings</h2>
+      <div style="height:2px;background:#9a7b3a;margin-bottom:16px;"></div>
+      <p style="font-size:12px;color:#5a5a54;line-height:1.65;margin-bottom:14px;">Your Anthropic API key is stored only in this browser. It is never sent anywhere except directly to Anthropic when you click Refresh.</p>
+      <label style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8a8a80;display:block;margin-bottom:6px;">Anthropic API Key</label>
+      <input id="api-key-input" type="password" value="${currentKey}"
+        placeholder="sk-ant-api03-..."
+        style="width:100%;border:1px solid #d0cdc4;padding:9px 12px;font-size:12px;font-family:monospace;margin-bottom:14px;outline:none;"/>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="document.getElementById('settings-modal').remove()"
+          style="background:none;border:1px solid #d0cdc4;padding:8px 18px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;color:#5a5a54;">Cancel</button>
+        <button onclick="const k=document.getElementById('api-key-input').value.trim();if(k){localStorage.setItem('gulf_epoch_api_key',k);document.getElementById('settings-modal').remove();const n=document.createElement('div');n.style.cssText='position:fixed;bottom:20px;right:20px;background:#1a5a2a;color:#fff;padding:10px 16px;font-family:var(--sans);font-size:12px;z-index:9999;';n.textContent='✓ API key saved';document.body.appendChild(n);setTimeout(()=>n.remove(),3000);}"
+          style="background:#1a1a18;color:#fff;border:none;padding:8px 18px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Save Key</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildNav();
+  buildHomePage();
+  setInterval(updateTimeAgo, 30000);
+});
+
+// Expose functions to global scope for onclick handlers
+window.triggerRefresh   = triggerRefresh;
+window.doRefresh        = doRefresh;
+window.navigateTo       = navigateTo;
+window.openArticle      = openArticle;
+window.openMenu         = openMenu;
+window.closeMenu        = closeMenu;
+</script>
+</body>
+</html>
