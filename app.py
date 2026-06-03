@@ -128,10 +128,14 @@ Return ONLY a valid JSON array with exactly 5 objects. Each must have:
 - "tag": 2-3 word category (string)
 - "headline": sharp newspaper headline (string)
 - "standfirst": one sentence summary (string)
-- "body": exactly 5 paragraphs separated by \\n\\n (string)
+- "body": exactly 3 short paragraphs separated by |||PARA||| — max 50 words each (string)
 - "sources": array of source names used (string[])
 
-Start with [ and end with ]. No markdown, no explanation, just JSON."""
+CRITICAL JSON RULES:
+- Straight double quotes only
+- No apostrophes — write "does not" not "doesn't", "the UAE" not "UAE's"
+- No line breaks inside strings
+Start with [ and end with ]. Nothing else."""
 
     response = requests.post(
         'https://api.anthropic.com/v1/messages',
@@ -142,7 +146,7 @@ Start with [ and end with ]. No markdown, no explanation, just JSON."""
         },
         json={
             'model': 'claude-sonnet-4-6',
-            'max_tokens': 2000,
+            'max_tokens': 3500,
             'messages': [{'role': 'user', 'content': prompt}],
         },
         timeout=55,
