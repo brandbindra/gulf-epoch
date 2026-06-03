@@ -221,6 +221,10 @@ def api_refresh():
         articles = synthesise(section_id, all_items, source_names)
         print(f"Articles synthesised: {len(articles)}")
 
+        # Convert |||PARA||| back to \n\n in body text
+        for a in articles:
+            if 'body' in a:
+                a['body'] = a['body'].replace('|||PARA|||', '\n\n')
         return jsonify({'section': section_id, 'articles': articles})
 
     except Exception as e:
