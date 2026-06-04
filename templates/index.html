@@ -1565,13 +1565,6 @@ function triggerRefresh() {
   const existing = document.getElementById('refresh-dropdown');
   if (existing) { existing.remove(); return; }
 
-  // Check API key
-  const apiKey = localStorage.getItem('gulf_epoch_api_key') || API_KEY;
-  if (!apiKey || apiKey.length < 20) {
-    showSettingsModal();
-    return;
-  }
-
   // Show dropdown
   const rect = btn.getBoundingClientRect();
   const dd = document.createElement('div');
@@ -1595,11 +1588,7 @@ function triggerRefresh() {
       <div style="font-size:11px;color:#8a8a80;">All 10 sections refreshed</div>
       <div style="font-size:10px;color:#9a7b3a;margin-top:3px;font-weight:600;">~$0.20 · ~3 minutes</div>
     </button>
-    <button onclick="showSettingsModal();document.getElementById('refresh-dropdown').remove()"
-      style="width:100%;background:none;border:none;padding:10px 16px;text-align:left;cursor:pointer;display:block;"
-      onmouseover="this.style.background='#f5f0e4'" onmouseout="this.style.background='none'">
-      <div style="font-size:11px;color:#8a8a80;">⚙ API Key Settings</div>
-    </button>`;
+`;
   document.body.appendChild(dd);
 
   // Close on outside click
