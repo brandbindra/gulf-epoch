@@ -89,8 +89,22 @@ def fetch_rss(feed):
         for item in root.iter('item'):
             title = item.findtext('title', '').strip()
             desc  = re.sub(r'<[^>]+>', '', item.findtext('description', '')).strip()[:300]
+            # Try to get image from enclosure, media:content, or media:thumbnail
+            image = ''
+            enclosure = item.find('enclosure')
+            if enclosure is not None and 'image' in enclosure.get('type',''):
+                image = enclosure.get('url','')
+            if not image:
+                media = item.find('{http://search.yahoo.com/mrss/}content')
+                if media is not None:
+                    image = media.get('url','')
+            if not image:
+                thumb = item.find('{http://search.yahoo.com/mrss/}thumbnail')
+                if thumb is not None:
+                    image = thumb.get('url','')
+
             if len(title) > 10:
-                items.append({'title': title, 'description': desc, 'source': feed['name']})
+                items.append({'title': title, 'description': desc, 'source': feed['name'], 'image': image})
             if len(items) >= 6:
                 break
         print(f"RSS OK [{feed['name']}]: {len(items)} items")
@@ -252,9 +266,12 @@ def api_refresh():
         print(f"Articles synthesised: {len(articles)}")
 
         # Convert |||PARA||| back to \n\n in body text
-        for a in articles:
+        # Attach first available image from RSS to each article
+        rss_images = [it.get('image','') for it in all_items if it.get('image','')]
+        for i, a in enumerate(articles):
             if 'body' in a:
                 a['body'] = a['body'].replace('|||PARA|||', '\n\n')
+            a['image'] = rss_images[i] if i < len(rss_images) else ''
         return jsonify({'section': section_id, 'articles': articles})
 
     except Exception as e:
