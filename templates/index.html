@@ -452,19 +452,9 @@ a { text-decoration: none; color: inherit; }
 .card-lead:hover { opacity: 0.85; }
 .card-lead:hover .lead-headline { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
 
-.lead-img-wrap {
-  position: relative;
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.lead-img {
-  width: 100%;
-  height: 240px;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-.card-lead:hover .lead-img { transform: scale(1.02); }
+
+
+.card-lead:hover 
 .lead-img-caption {
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -513,14 +503,8 @@ a { text-decoration: none; color: inherit; }
 .card-med:hover { opacity: 0.85; }
 .card-med:hover .med-headline { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
 
-.med-img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  margin-bottom: 9px;
-  transition: opacity 0.2s;
-}
-.card-med:hover .med-img { opacity: 0.9; }
+
+.card-med:hover 
 .med-headline {
   font-family: var(--serif);
   font-size: 16px;
@@ -560,12 +544,7 @@ a { text-decoration: none; color: inherit; }
   color: var(--ink);
   margin-bottom: 5px;
 }
-.small-img {
-  width: 72px; height: 56px;
-  object-fit: cover;
-  flex-shrink: 0;
-  margin-left: 10px;
-}
+
 
 /* ════════════════════════════════════════════════════════════════════════
    SECTION PAGE
@@ -687,13 +666,8 @@ a { text-decoration: none; color: inherit; }
   border-radius: 0 2px 2px 0;
 }
 
-.reader-img-wrap { margin-bottom: 24px; overflow: hidden; }
-.reader-img {
-  width: 100%;
-  height: 420px;
-  object-fit: cover;
-  display: block;
-}
+
+
 .reader-img-credit {
   font-family: var(--sans);
   font-size: 10px;
@@ -927,13 +901,13 @@ a { text-decoration: none; color: inherit; }
   }
   .col-3, .col-4 { display: none; }
   .col-2 { border-right: none; padding-right: 0; border-left: none; }
-  .lead-img { height: 180px; }
+  
   .section-page-grid { grid-template-columns: 1fr; gap: 20px; }
   .section-sidebar { border-left: none; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 16px; }
   .section-more-grid { grid-template-columns: 1fr 1fr; }
   .related-grid { grid-template-columns: 1fr; }
   .reader-body p { font-size: 15px; }
-  .reader-img { height: 220px; }
+  
 }
 @media (max-width: 560px) {
   .masthead-title { font-size: 26px; }
@@ -1172,9 +1146,7 @@ let currentSection = null;
 let openStartTime = Date.now();
 
 // Utility
-function img(article) {
-  return (article && article.image) ? article.image : '';
-}
+// No images — text-only layout
 function readTime(body) {
   const words = (body || "").split(/\s+/).length;
   return Math.max(3, Math.round(words / 200));
@@ -1300,12 +1272,9 @@ function sectionBlockHtml(sid) {
 }
 
 function leadCardHtml(a, sid, idx) {
-  const imgSrc = img(a);
   return `
   <article class="card-lead" onclick="openArticle(${safeJson(a,'.')}, '${sid}')">
-    <div class="lead-img-wrap">
-      <img class="lead-img" src="${escHtml(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">
-    </div>
+
     <div class="lead-border">
       <span class="art-tag">${escHtml(a.tag)}</span>
     </div>
@@ -1317,10 +1286,8 @@ function leadCardHtml(a, sid, idx) {
 }
 
 function medCardHtml(a, sid, idx) {
-  const imgSrc = img(a);
   return `
   <article class="card-med" onclick="openArticle(${safeJson(a,'.')}, '${sid}')">
-    ${imgSrc ? `<img class="med-img" src="${escHtml(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
     <span class="art-tag">${escHtml(a.tag)}</span>
     <h3 class="med-headline">${escHtml(a.headline)}</h3>
     <p class="med-standfirst">${escHtml(a.standfirst)}</p>
@@ -1329,7 +1296,6 @@ function medCardHtml(a, sid, idx) {
 }
 
 function smallCardHtml(a, sid) {
-  const imgSrc = img(a);
   return `
   <article class="card-small" onclick="openArticle(${safeJson(a,'.')}, '${sid}')">
     <div class="small-bar"></div>
@@ -1338,7 +1304,6 @@ function smallCardHtml(a, sid) {
       <h4 class="small-headline">${escHtml(a.headline)}</h4>
       ${badgesHtml(a.sources)}
     </div>
-    <img class="small-img" src="${escHtml(imgSrc)}" alt="" loading="lazy" onerror="this.style.display='none'">
   </article>`;
 }
 
@@ -1397,7 +1362,6 @@ function openArticle(a, sid) {
   document.getElementById('article-reader').style.display = 'block';
 
   const sec = SECTIONS.find(s => s.id === sid);
-  const imgSrc = img(a);
   const paras = (a.body || '').split('\n\n').filter(Boolean);
   const rt = readTime(a.body);
   const reader = document.getElementById('article-reader');
@@ -1428,7 +1392,7 @@ function openArticle(a, sid) {
       <span class="reader-meta-item">${escHtml(REFRESH_TIMESTAMP)}</span>
     </div>
 
-    ${imgSrc ? `<div class="reader-img-wrap"><img class="reader-img" src="${escHtml(imgSrc)}" alt="" onerror="this.parentElement.style.display='none'"><p class="reader-img-credit">Sources: ${escHtml((a.sources||[]).join(' · '))}</p></div>` : ''}
+
 
     <div class="reader-body">
       ${paras.map(p => `<p>${escHtml(p)}</p>`).join('')}
