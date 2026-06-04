@@ -11,12 +11,12 @@ FEEDS = {
     'mideast-uae': [
         {'name':'Al Jazeera',    'url':'https://www.aljazeera.com/xml/rss/all.xml'},
         {'name':'BBC ME',        'url':'https://feeds.bbci.co.uk/news/world/middle_east/rss.xml'},
-        {'name':'BBC World',     'url':'https://feeds.bbci.co.uk/news/world/rss.xml'},
+        {'name':'Reuters ME',    'url':'https://feeds.reuters.com/reuters/worldNews'},
     ],
     'uae': [
-        {'name':'Gulf News',     'url':'https://gulfnews.com/rss'},
-        {'name':'The National',  'url':'https://www.thenationalnews.com/rss'},
-        {'name':'BBC ME',        'url':'https://feeds.bbci.co.uk/news/world/middle_east/rss.xml'},
+        {'name':'Gulf News UAE',  'url':'https://gulfnews.com/uae/rss'},
+        {'name':'The National UAE','url':'https://www.thenationalnews.com/uae/rss'},
+        {'name':'Khaleej Times',  'url':'https://www.khaleejtimes.com/uae/rss'},
     ],
     'subcontinent': [
         {'name':'NDTV',          'url':'https://feeds.feedburner.com/ndtvnews-top-stories'},
@@ -89,22 +89,8 @@ def fetch_rss(feed):
         for item in root.iter('item'):
             title = item.findtext('title', '').strip()
             desc  = re.sub(r'<[^>]+>', '', item.findtext('description', '')).strip()[:300]
-            # Try to get image from enclosure, media:content, or media:thumbnail
-            image = ''
-            enclosure = item.find('enclosure')
-            if enclosure is not None and 'image' in enclosure.get('type',''):
-                image = enclosure.get('url','')
-            if not image:
-                media = item.find('{http://search.yahoo.com/mrss/}content')
-                if media is not None:
-                    image = media.get('url','')
-            if not image:
-                thumb = item.find('{http://search.yahoo.com/mrss/}thumbnail')
-                if thumb is not None:
-                    image = thumb.get('url','')
-
             if len(title) > 10:
-                items.append({'title': title, 'description': desc, 'source': feed['name'], 'image': image})
+                items.append({'title': title, 'description': desc, 'source': feed['name']})
             if len(items) >= 6:
                 break
         print(f"RSS OK [{feed['name']}]: {len(items)} items")
@@ -133,10 +119,14 @@ HEADLINES:
 
 Write exactly 5 original news articles based on these REAL headlines. Each article must:
 1. Be based ONLY on actual stories in the headlines — no invented facts
-2. Synthesise multiple related headlines into one cohesive story where possible
-3. Be written in authoritative, elegant newspaper English
-4. Prioritise stories relevant to a UAE-based reader
-5. Be accurate — only state facts from the source headlines
+2. Synthesise related headlines into one cohesive story where possible
+3. Be written in authoritative newspaper English
+4. Only state facts supported by the source headlines
+
+CRITICAL SECTION RULES:
+- Section "Gulf Slate - Middle East & UAE": cover REGIONAL stories (Iran, Israel, Lebanon, Saudi Arabia, broader Middle East geopolitics). Do NOT write about UAE domestic/local topics.
+- Section "Gulf Slate - UAE": cover ONLY UAE domestic news (UAE laws, Dubai/Abu Dhabi events, UAE economy, UAE government, UAE residents). Do NOT repeat any Middle East regional conflict stories.
+- All other sections: stay strictly within the section topic.
 
 Return ONLY a valid JSON array with exactly 5 objects. Each must have:
 - "tag": 2-3 word category (string)
@@ -266,12 +256,9 @@ def api_refresh():
         print(f"Articles synthesised: {len(articles)}")
 
         # Convert |||PARA||| back to \n\n in body text
-        # Attach first available image from RSS to each article
-        rss_images = [it.get('image','') for it in all_items if it.get('image','')]
-        for i, a in enumerate(articles):
+        for a in articles:
             if 'body' in a:
                 a['body'] = a['body'].replace('|||PARA|||', '\n\n')
-            a['image'] = rss_images[i] if i < len(rss_images) else ''
         return jsonify({'section': section_id, 'articles': articles})
 
     except Exception as e:
