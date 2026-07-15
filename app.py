@@ -14,9 +14,9 @@ FEEDS = {
         {'name':'Reuters ME',    'url':'https://feeds.reuters.com/reuters/worldNews'},
     ],
     'uae': [
-        {'name':'Gulf News UAE',  'url':'https://gulfnews.com/uae/rss'},
-        {'name':'The National UAE','url':'https://www.thenationalnews.com/uae/rss'},
-        {'name':'Khaleej Times',  'url':'https://www.khaleejtimes.com/uae/rss'},
+        {'name':'Gulf News',      'url':'https://gulfnews.com/rss'},
+        {'name':'The National',   'url':'https://www.thenationalnews.com/rss'},
+        {'name':'Khaleej Times',  'url':'https://www.khaleejtimes.com/rss'},
     ],
     'subcontinent': [
         {'name':'NDTV',          'url':'https://feeds.feedburner.com/ndtvnews-top-stories'},
@@ -124,9 +124,9 @@ Write exactly 5 original news articles based on these REAL headlines. Each artic
 4. Only state facts supported by the source headlines
 
 CRITICAL SECTION RULES:
-- Section "Gulf Slate - Middle East & UAE": cover REGIONAL stories (Iran, Israel, Lebanon, Saudi Arabia, broader Middle East geopolitics). Do NOT write about UAE domestic/local topics.
-- Section "Gulf Slate - UAE": cover ONLY UAE domestic news (UAE laws, Dubai/Abu Dhabi events, UAE economy, UAE government, UAE residents). Do NOT repeat any Middle East regional conflict stories.
-- All other sections: stay strictly within the section topic.
+- If label contains "Middle East": Write ONLY about regional geopolitics (Iran, Israel, Lebanon, Gaza, Saudi Arabia, broader Arab world). Zero UAE domestic content.
+- If label contains "Gulf Slate - UAE": Write ONLY about UAE domestic topics (Dubai, Abu Dhabi, Sharjah, UAE laws, UAE economy, UAE residents, UAE government announcements). Do NOT mention Iran war, Hezbollah, Gaza or any regional conflict — those belong in the Middle East section.
+- All other sections: cover only stories matching that section topic exactly.
 
 Return ONLY a valid JSON array with exactly 5 objects. Each must have:
 - "tag": 2-3 word category (string)
