@@ -1508,8 +1508,20 @@ async function doRefresh(sections) {
     await new Promise(r => setTimeout(r, 300));
   }
 
-  setProgress('✓ Complete — updating page…', 100, '');
+  setProgress('✓ Complete — saving and updating page…', 100, '');
   await new Promise(r => setTimeout(r, 600));
+
+  // Save refreshed news to localStorage so it survives page reloads
+  try {
+    const toSave = {};
+    sections.forEach(sid => { if (NEWS[sid]) toSave[sid] = NEWS[sid]; });
+    localStorage.setItem('gulf_epoch_news', JSON.stringify(toSave));
+    const now = new Date().toLocaleString('en-GB', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' UAE';
+    localStorage.setItem('gulf_epoch_timestamp', now);
+    console.log('News saved to localStorage');
+  } catch(e) {
+    console.warn('Could not save news:', e);
+  }
 
   buildHomePage();
   if (currentPage !== 'home' && NEWS[currentPage]) renderSectionPage(currentPage);
@@ -1594,6 +1606,29 @@ function showSettingsModal() {
 
 // ── Init ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  // Load saved news from localStorage if available
+  try {
+    const saved = localStorage.getItem('gulf_epoch_news');
+    const savedTime = localStorage.getItem('gulf_epoch_timestamp');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Merge saved articles into NEWS object
+      Object.keys(parsed).forEach(sid => {
+        if (parsed[sid] && parsed[sid].length > 0) {
+          NEWS[sid] = parsed[sid];
+        }
+      });
+      // Update timestamp display
+      if (savedTime) {
+        const stamp = document.getElementById('refresh-stamp');
+        if (stamp) stamp.textContent = savedTime;
+      }
+      console.log('Loaded saved news from localStorage');
+    }
+  } catch(e) {
+    console.warn('Could not load saved news:', e);
+  }
+
   buildNav();
   buildHomePage();
   setInterval(updateTimeAgo, 30000);
