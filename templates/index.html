@@ -1187,11 +1187,11 @@ function buildNav() {
     `<button onclick="navigateTo('${s.id}')">${s.label.split('—')[0].trim()}</button>`
   ).join('');
 
-  // Build scrolling ticker — duplicate items for seamless loop
-  const tickerItems = TICKER.split(' · ');
+  // Build scrolling ticker — use saved or default
+  const savedTicker = localStorage.getItem('gulf_epoch_ticker');
+  const tickerItems = (savedTicker || TICKER).split(' · ');
   const scroll = document.getElementById('ticker-scroll');
   if (scroll) {
-    // Build two copies for seamless infinite scroll
     const buildItems = () => tickerItems.map(t =>
       `<span class="ticker-item">${escHtml(t)}</span><span class="ticker-divider">◆</span>`
     ).join('');
@@ -1501,35 +1501,44 @@ async function doRefresh(sections) {
       }
     } catch(e) {
       console.error('Refresh error:', sid, e);
-      setProgress(`❌ Error: ${e.message}`, pct, '');
-      await new Promise(r => setTimeout(r, 2000));
+      setProgress(`⚠ ${secLabel}: ${e.message.slice(0,50)}`, pct, 'Continuing with next section…');
+      await new Promise(r => setTimeout(r, 1500));
     }
     completed++;
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 200));
   }
 
   setProgress('✓ Complete — saving and updating page…', 100, '');
   await new Promise(r => setTimeout(r, 600));
 
-  // Save entire NEWS object to localStorage so it survives page reloads
-  try {
-    localStorage.setItem('gulf_epoch_news', JSON.stringify(NEWS));
-    const now = new Date().toLocaleString('en-GB', {
-      weekday:'short', day:'numeric', month:'short',
-      hour:'2-digit', minute:'2-digit'
-    }) + ' UAE';
-    localStorage.setItem('gulf_epoch_timestamp', now);
-    console.log('All news saved to localStorage');
-  } catch(e) {
-    console.warn('Could not save news:', e);
-  }
-
   buildHomePage();
   if (currentPage !== 'home' && NEWS[currentPage]) renderSectionPage(currentPage);
 
-  const now = new Date().toLocaleString('en-GB', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' UAE';
+  const now = new Date().toLocaleString('en-GB', {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' UAE';
   const stamp = document.getElementById('refresh-stamp');
   if (stamp) stamp.textContent = now;
+
+  // Update ticker with fresh headlines
+  const freshLines = sections
+    .filter(sid => NEWS[sid] && NEWS[sid].length > 0)
+    .flatMap(sid => NEWS[sid].slice(0,2).map(a => a.headline))
+    .join(' · ');
+  if (freshLines) {
+    const tickerScroll = document.getElementById('ticker-scroll');
+    if (tickerScroll) {
+      const items = freshLines.split(' · ').map(t =>
+        `<span class="ticker-item">${escHtml(t)}</span><span class="ticker-divider">◆</span>`
+      ).join('');
+      tickerScroll.innerHTML = items + items;
+    }
+    localStorage.setItem('gulf_epoch_ticker', freshLines);
+  }
+
+  // Save to localStorage
+  try {
+    localStorage.setItem('gulf_epoch_news', JSON.stringify(NEWS));
+    localStorage.setItem('gulf_epoch_timestamp', now);
+  } catch(e) { console.warn('localStorage save failed:', e); }
 
   setTimeout(() => overlay.remove(), 2000);
   if (btn) { btn.innerHTML = '↻ Refresh ▾'; btn.disabled = false; }
