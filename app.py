@@ -82,7 +82,7 @@ RSS_HEADERS = {
 
 def fetch_rss(feed):
     try:
-        r = requests.get(feed['url'], headers=RSS_HEADERS, timeout=10)
+        r = requests.get(feed['url'], headers=RSS_HEADERS, timeout=15)
         r.raise_for_status()
         root = ET.fromstring(r.content)
         items = []
@@ -132,7 +132,7 @@ Return ONLY a valid JSON array with exactly 5 objects. Each must have:
 - "tag": 2-3 word category (string)
 - "headline": sharp newspaper headline (string)
 - "standfirst": one sentence summary (string)
-- "body": exactly 3 short paragraphs separated by |||PARA||| — max 50 words each (string)
+- "body": exactly 2 paragraphs separated by |||PARA||| — max 40 words each (string)
 - "sources": array of source names used (string[])
 
 CRITICAL JSON RULES:
@@ -150,7 +150,7 @@ Start with [ and end with ]. Nothing else."""
         },
         json={
             'model': 'claude-sonnet-4-6',
-            'max_tokens': 3500,
+            'max_tokens': 2500,
             'messages': [{'role': 'user', 'content': prompt}],
         },
         timeout=55,
