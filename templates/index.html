@@ -961,7 +961,7 @@ article:hover { opacity: 0.88; }
   <div class="header-utility">
     <span id="today-date"></span>
     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-      <span>🕐 Synthesised: <span class="refresh-stamp" id="refresh-stamp">Wednesday, 3 June 2026 · 10:30 UAE</span> <span id="time-ago" style="color:var(--ink-muted);font-size:10px"></span></span>
+      <span>🕐 Synthesised: <span class="refresh-stamp" id="refresh-stamp">Loading…</span> <span id="time-ago" style="color:var(--ink-muted);font-size:10px"></span></span>
 
     </div>
   </div>
@@ -1197,7 +1197,7 @@ function buildNav() {
     ).join('');
     scroll.innerHTML = buildItems() + buildItems();
   }
-  document.getElementById('refresh-stamp').textContent = REFRESH_TIMESTAMP;
+  // Timestamp set by localStorage or REFRESH_TIMESTAMP below
   document.getElementById('today-date').textContent =
     new Date().toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
@@ -1511,14 +1511,15 @@ async function doRefresh(sections) {
   setProgress('✓ Complete — saving and updating page…', 100, '');
   await new Promise(r => setTimeout(r, 600));
 
-  // Save refreshed news to localStorage so it survives page reloads
+  // Save entire NEWS object to localStorage so it survives page reloads
   try {
-    const toSave = {};
-    sections.forEach(sid => { if (NEWS[sid]) toSave[sid] = NEWS[sid]; });
-    localStorage.setItem('gulf_epoch_news', JSON.stringify(toSave));
-    const now = new Date().toLocaleString('en-GB', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + ' UAE';
+    localStorage.setItem('gulf_epoch_news', JSON.stringify(NEWS));
+    const now = new Date().toLocaleString('en-GB', {
+      weekday:'short', day:'numeric', month:'short',
+      hour:'2-digit', minute:'2-digit'
+    }) + ' UAE';
     localStorage.setItem('gulf_epoch_timestamp', now);
-    console.log('News saved to localStorage');
+    console.log('All news saved to localStorage');
   } catch(e) {
     console.warn('Could not save news:', e);
   }
@@ -1624,9 +1625,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (stamp) stamp.textContent = savedTime;
       }
       console.log('Loaded saved news from localStorage');
+    } else {
+      // No saved news — show hardcoded timestamp
+      const stamp = document.getElementById('refresh-stamp');
+      if (stamp) stamp.textContent = REFRESH_TIMESTAMP;
     }
   } catch(e) {
     console.warn('Could not load saved news:', e);
+    const stamp = document.getElementById('refresh-stamp');
+    if (stamp) stamp.textContent = REFRESH_TIMESTAMP;
   }
 
   buildNav();
