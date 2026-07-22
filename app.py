@@ -123,10 +123,10 @@ Write exactly 5 original news articles based on these REAL headlines. Each artic
 3. Be written in authoritative newspaper English
 4. Only state facts supported by the source headlines
 
-CRITICAL SECTION RULES:
-- If label contains "Middle East": Write ONLY about regional geopolitics (Iran, Israel, Lebanon, Gaza, Saudi Arabia, broader Arab world). Zero UAE domestic content.
-- If label contains "Gulf Slate - UAE": Write ONLY about UAE domestic topics (Dubai, Abu Dhabi, Sharjah, UAE laws, UAE economy, UAE residents, UAE government announcements). Do NOT mention Iran war, Hezbollah, Gaza or any regional conflict — those belong in the Middle East section.
-- All other sections: cover only stories matching that section topic exactly.
+SECTION FOCUS for "{label}":
+- "Gulf Slate - Middle East": Write about regional geopolitics — Iran, Israel, Lebanon, Gaza, Saudi Arabia. Focus on the UAE's ROLE in regional events (UAE diplomacy, UAE response, UAE impact).
+- "Gulf Slate - UAE": Write ONLY about UAE domestic life — Dubai/Abu Dhabi events, UAE laws, UAE economy, UAE residents, UAE business. If a headline mentions UAE's response to regional events, write about the UAE domestic impact angle only. Always write exactly 5 articles.
+- Other sections: focus on the section topic.
 
 Return ONLY a valid JSON array with exactly 5 objects. Each must have:
 - "tag": 2-3 word category (string)
