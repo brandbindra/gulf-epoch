@@ -14,9 +14,9 @@ FEEDS = {
         {'name':'Reuters ME',    'url':'https://feeds.reuters.com/reuters/worldNews'},
     ],
     'uae': [
-        {'name':'Gulf News',      'url':'https://gulfnews.com/rss'},
-        {'name':'The National',   'url':'https://www.thenationalnews.com/rss'},
-        {'name':'Khaleej Times',  'url':'https://www.khaleejtimes.com/rss'},
+        {'name':'BBC ME',         'url':'https://feeds.bbci.co.uk/news/world/middle_east/rss.xml'},
+        {'name':'Al Jazeera',     'url':'https://www.aljazeera.com/xml/rss/all.xml'},
+        {'name':'BBC World',      'url':'https://feeds.bbci.co.uk/news/world/rss.xml'},
     ],
     'subcontinent': [
         {'name':'NDTV',          'url':'https://feeds.feedburner.com/ndtvnews-top-stories'},
@@ -153,7 +153,7 @@ Start with [ and end with ]. Nothing else."""
             'max_tokens': 2500,
             'messages': [{'role': 'user', 'content': prompt}],
         },
-        timeout=55,
+        timeout=50,
     )
 
     if not response.ok:
