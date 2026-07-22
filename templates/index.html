@@ -299,7 +299,7 @@ a { text-decoration: none; color: inherit; }
   display: flex;
   align-items: center;
   white-space: nowrap;
-  animation: ticker-move 45s linear infinite;
+  animation: ticker-move 120s linear infinite;
   gap: 0;
 }
 .ticker-scroll:hover { animation-play-state: paused; }
@@ -1617,25 +1617,42 @@ function showSettingsModal() {
 // ── Init ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   // Load saved news from localStorage if available
+  const APP_VERSION = 'v2.0';
   try {
+    const savedVersion = localStorage.getItem('gulf_epoch_version');
     const saved = localStorage.getItem('gulf_epoch_news');
     const savedTime = localStorage.getItem('gulf_epoch_timestamp');
-    if (saved) {
+
+    // Clear old data if version mismatch
+    if (savedVersion !== APP_VERSION) {
+      localStorage.removeItem('gulf_epoch_news');
+      localStorage.removeItem('gulf_epoch_timestamp');
+      localStorage.removeItem('gulf_epoch_ticker');
+      localStorage.setItem('gulf_epoch_version', APP_VERSION);
+      console.log('Cleared old localStorage data — version updated');
+      const stamp = document.getElementById('refresh-stamp');
+      if (stamp) stamp.textContent = REFRESH_TIMESTAMP;
+    } else if (saved) {
       const parsed = JSON.parse(saved);
-      // Merge saved articles into NEWS object
-      Object.keys(parsed).forEach(sid => {
-        if (parsed[sid] && parsed[sid].length > 0) {
-          NEWS[sid] = parsed[sid];
-        }
-      });
-      // Update timestamp display
-      if (savedTime) {
+      // Only load if data looks like refreshed (not hardcoded June 3)
+      const savedTs = savedTime || '';
+      const isHardcoded = savedTs.includes('3 Jun') || savedTs.includes('June 2026') || savedTs === '';
+      if (!isHardcoded) {
+        Object.keys(parsed).forEach(sid => {
+          if (parsed[sid] && parsed[sid].length > 0) NEWS[sid] = parsed[sid];
+        });
         const stamp = document.getElementById('refresh-stamp');
         if (stamp) stamp.textContent = savedTime;
+        console.log('Loaded fresh news from localStorage:', savedTime);
+      } else {
+        // Hardcoded data in localStorage — clear it
+        localStorage.removeItem('gulf_epoch_news');
+        localStorage.removeItem('gulf_epoch_timestamp');
+        const stamp = document.getElementById('refresh-stamp');
+        if (stamp) stamp.textContent = REFRESH_TIMESTAMP;
+        console.log('Cleared hardcoded data from localStorage');
       }
-      console.log('Loaded saved news from localStorage');
     } else {
-      // No saved news — show hardcoded timestamp
       const stamp = document.getElementById('refresh-stamp');
       if (stamp) stamp.textContent = REFRESH_TIMESTAMP;
     }
